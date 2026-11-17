@@ -121,16 +121,14 @@ def fig6_2():
     ax.axhline(1.0, color="0.45", ls="--", lw=1.0)
     ax.text(0.02, 1.03, "无增益界线 $V=\\sigma_1^2$", fontsize=8.5, color="0.35")
 
-    # 工作点：63 段基线（k≈1.4，池化 rho=0.172）与 10 对实验的前后两点
+    # 工作点：63 段基线（k≈1.4，池化 rho=0.172）
     ax.plot([0.172], [v_scc(0.172, 1.4)], "s", ms=7, mfc="white",
             mec=C_GREEN, mew=1.6)
     ax.annotate("63 段工作点\n$\\rho$=0.172, $k$=1.4", (0.172, v_scc(0.172, 1.4)),
                 textcoords="offset points", xytext=(10, -26), fontsize=8.5)
-    ax.plot([0.520, 0.224], [v_scc(0.520, 1.4), v_scc(0.224, 1.4)], ">", ms=7,
-            color=C_RED)
-    ax.text(0.40, 0.63,
-            "红色三角：模型集失配与匹配时的工作点\n$\\rho$ 由 0.520 降至 0.224（$k$=1.4）",
-            fontsize=8.4, color=C_RED)
+    ax.text(0.42, 0.575,
+            "10 对实验按其自身方差比的有效上界：\n$k$=1.18 时 0.73，$k$=1.26 时 0.64",
+            fontsize=8.4, color="0.25")
 
     ax.set_xlabel("两站误差相关系数 $\\rho$")
     ax.set_ylabel("融合方差比 $\\sigma_f^2/\\sigma_1^2$")
