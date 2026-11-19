@@ -1,6 +1,5 @@
 *.doc
 *.docx
 *.pdf
-论文全文.md
 __pycache__/
 *.pyc
