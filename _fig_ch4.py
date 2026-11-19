@@ -66,16 +66,17 @@ def fig4_1():
         arrow(ax, (4.10, y + 0.31), (4.53, 3.00))
 
     box(ax, 6.70, 2.30, 1.55, 1.40, "加权融合\n$\\hat x=\\sum \\mu_i \\hat x_i$", fc="#f4ecf7", ec="#7d3c98")
-    for _, y in models:
-        arrow(ax, (6.30, 3.00), (6.68, 3.00), color="#1e8449", ls=":")
+    arrow(ax, (6.30, 3.00), (6.68, 3.00), color="#1e8449", ls=":")
 
     arrow(ax, (8.25, 3.00), (9.35, 3.00), color="#7d3c98")
     ax.text(9.40, 3.00, "航迹输出", fontsize=9, va="center")
 
-    # 反馈支路
-    ax.plot([9.0, 9.0, 3.2, 3.2], [2.55, 0.30, 0.30, 0.72], color="#7f8c8d", lw=1.0, ls="--")
-    arrow(ax, (3.2, 0.72), (3.2, 0.74), color="#7f8c8d")
-    ax.text(6.0, 0.12, "状态与协方差反馈：按模型概率混合后重新初始化各滤波器", fontsize=8.5, color=C_GRAY, ha="center")
+    # 反馈支路：一条总线，分别送入五个滤波器
+    ax.plot([9.0, 9.0, 2.18], [2.55, 0.30, 0.30], color="#7f8c8d", lw=1.0, ls="--")
+    ax.plot([2.18, 2.18], [0.30, models[0][1] + 0.10], color="#7f8c8d", lw=1.0, ls="--")
+    for _, y in models:
+        arrow(ax, (2.18, y + 0.10), (2.33, y + 0.10), color="#7f8c8d", ls=":")
+    ax.text(6.0, 0.12, "状态与协方差反馈：五个滤波器按混合后的状态与协方差重新初始化", fontsize=8.5, color=C_GRAY, ha="center")
 
     ax.text(2.3, 5.55, "五模型：1 个匀速 + 4 个协同转弯（左右各两档）", fontsize=9.5)
     ax.text(2.3, 5.15, "转移概率由驻留时间生成：$\\pi_{ii}=e^{-dt/\\tau_i}$", fontsize=9.5)

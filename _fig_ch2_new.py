@@ -142,29 +142,31 @@ def fig2_2():
     ax.axis("off")
     ax.add_patch(plt.Rectangle((0.4, 5.0), 9.2, 0.6, fc="#d6eaf8", ec="#5d8aa8", lw=0.9))
     ax.text(5.0, 5.3, "电离层", ha="center", fontsize=9.5)
-    ax.plot([0.4, 9.6], [0.5, 0.5], color="#34495e", lw=1.5)
-    ax.plot([0.4, 9.6], [1.35, 1.35], color="#85929e", lw=1.0, ls="--")
-    ax.text(9.62, 1.35, "等效地面弧线", fontsize=8, va="center", color=C_GRAY)
+    ax.plot([0.4, 9.6], [0.50, 0.50], color="#34495e", lw=1.5)
+    ax.text(9.30, 0.62, "地面", fontsize=8, va="center", ha="right", color=C_GRAY)
 
-    ax.plot(2.0, 0.5, "^", ms=11, color=C_RED)
-    ax.text(2.0, 0.18, "Tx", ha="center", fontsize=10)
-    ax.plot(8.0, 0.5, "v", ms=11, color=C_BLUE)
-    ax.text(8.0, 0.18, "Rx", ha="center", fontsize=10)
-    ax.plot(5.4, 3.0, "o", ms=8, color="#1c2833")
-    ax.text(5.55, 3.1, "目标", fontsize=9.5)
+    ax.plot(2.0, 0.50, "^", ms=11, color=C_RED)
+    ax.text(1.88, 0.60, "Tx", ha="right", fontsize=10)
+    ax.plot(8.0, 0.50, "v", ms=11, color=C_BLUE)
+    ax.text(8.12, 0.60, "Rx", ha="left", fontsize=10)
+    ax.plot(5.4, 0.50, "o", ms=8, color="#1c2833")
+    ax.text(5.55, 0.60, "目标", fontsize=9.5)
 
-    for a, b, c in (((2.0, 0.55), (3.7, 5.0), C_RED), ((3.7, 5.0), (5.4, 3.0), C_RED),
-                    ((8.0, 0.55), (6.7, 5.0), C_BLUE), ((6.7, 5.0), (5.4, 3.0), C_BLUE)):
+    for a, b, c in (((2.0, 0.55), (3.7, 5.0), C_RED), ((3.7, 5.0), (5.4, 0.55), C_RED),
+                    ((8.0, 0.55), (6.7, 5.0), C_BLUE), ((6.7, 5.0), (5.4, 0.55), C_BLUE)):
         ax.annotate("", xy=b, xytext=a, arrowprops=dict(arrowstyle="-", color=c, lw=1.2))
 
-    ax.annotate("", xy=(5.4, 5.0), xytext=(5.4, 1.35),
+    ax.annotate("", xy=(5.4, 5.0), xytext=(5.4, 0.60),
                 arrowprops=dict(arrowstyle="<->", color=C_ORANGE, lw=1.1, ls="--"))
-    ax.text(5.55, 3.9, r"$h$", color=C_ORANGE, fontsize=12)
-    ax.annotate("", xy=(7.9, 1.15), xytext=(2.1, 1.15),
+    ax.text(5.55, 3.1, r"$h$", color=C_ORANGE, fontsize=12)
+    ax.annotate("", xy=(8.0, 0.22), xytext=(2.0, 0.22),
                 arrowprops=dict(arrowstyle="<->", color="#34495e", lw=1.0))
-    ax.text(5.0, 1.2, "基线 L", ha="center", fontsize=9)
-    ax.text(2.45, 2.7, "发射路径", color=C_RED, fontsize=9)
-    ax.text(6.35, 2.35, "接收路径", color=C_BLUE, fontsize=9)
+    for x in (2.0, 8.0):
+        ax.plot([x, x], [0.46, 0.22], color="#34495e", lw=0.8, ls=":")
+    ax.text(3.05, 0.22, "基线 $L_b$", ha="center", va="center", fontsize=9,
+            bbox=dict(fc="white", ec="none", pad=1.5))
+    ax.text(2.42, 2.55, "发射路径", color=C_RED, fontsize=9)
+    ax.text(6.30, 2.20, "接收路径", color=C_BLUE, fontsize=9)
     ax.set_title("(a) 天波双基地传播路径与等效虚高", fontsize=10.5)
 
     ax = axes[1]
@@ -176,7 +178,7 @@ def fig2_2():
     for x in (1000, 1900):
         ax.axvline(x, color="0.7", lw=0.8, ls=":")
     ax.set_xlabel("目标至接收站的地面距离  / km")
-    ax.set_ylabel("灵敏度  $\partial R_g / \partial h$")
+    ax.set_ylabel(r"灵敏度  $\partial R_g / \partial h$")
     ax.set_title("(b) 群距离对虚高的灵敏度随距离衰减", fontsize=10.5)
     ax.legend(frameon=False, fontsize=9, loc="upper right")
     ax.grid(alpha=0.3, ls=":")

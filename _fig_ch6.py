@@ -7,8 +7,8 @@
   - 图6-3 _analysis/mc_online_chain.csv（47 对，基线/优化）负增益计数
 
 产出
-  Pictures/fig6_1_mechanism.png
-  Pictures/fig6_2_gain_region.png
+  Pictures/fig6_1_gain_region.png
+  Pictures/fig6_2_mechanism.png
   Pictures/fig6_3_negative_gain.png
 
 复现：
@@ -51,7 +51,7 @@ def arrow(ax, p, q, color="#2c3e50"):
                                 shrinkA=0, shrinkB=0))
 
 
-def fig6_1():
+def fig6_2():
     fig, ax = plt.subplots(figsize=(10.4, 4.6))
     ax.set_xlim(0, 12)
     ax.set_ylim(0, 6.2)
@@ -65,7 +65,7 @@ def fig6_1():
 
     ys = [4.55, 3.20, 1.85]
     labels = [
-        ("单站残差减小\nR1 -13.2%、R2 -6.4%（不显著）", "#eafaf1", "#1e8449"),
+        ("单站残差减小\nR1 -13.8%、R2 -8.1%（不显著）", "#eafaf1", "#1e8449"),
         ("共同模型误差减小\n池化 ρ 0.520 → 0.224", "#fdedec", "#c0392b"),
         ("协方差更可信\nNEES 4.49→2.87、2.94→1.53", "#f4ecf7", "#7d3c98"),
     ]
@@ -83,13 +83,13 @@ def fig6_1():
             "三条通道同时改善，但决定增益大小的是中间一条：两站误差的相关系数。",
             fontsize=9.0, ha="center", color="0.2")
     ax.text(6.0, 0.85,
-            "已知 ρ 与两源方差比 k 时，融合增益有闭式表达（6.2 节），与融合算法无关。",
+            "逆方差加权下，融合增益可由 $\\rho$ 与两源方差比 $k$ 的闭式（6.2 节）直接给出。",
             fontsize=9.0, ha="center", color="0.2")
 
     fig.tight_layout()
-    fig.savefig(os.path.join(OUT, "fig6_1_mechanism.png"), dpi=200, facecolor="white")
+    fig.savefig(os.path.join(OUT, "fig6_2_mechanism.png"), dpi=200, facecolor="white")
     plt.close(fig)
-    print("  -> fig6_1_mechanism.png")
+    print("  -> fig6_2_mechanism.png")
 
 
 def v_scc(rho, k):
@@ -97,7 +97,7 @@ def v_scc(rho, k):
     return k ** 2 / (1 + k ** 2) + 2 * rho * k ** 3 / (1 + k ** 2) ** 2
 
 
-def fig6_2():
+def fig6_1():
     rho = np.linspace(0, 1, 401)
     ks = [1.0, 1.4, 2.0, 3.0]
     colors = [C_BLUE, C_GREEN, C_ORANGE, C_RED]
@@ -139,9 +139,9 @@ def fig6_2():
               title="方差比 $k=\\sigma_2/\\sigma_1$", title_fontsize=8.5)
     ax.set_title("逆方差加权融合的方差随相关系数上升；曲线与虚线之交点即该方差比下的有效上界", fontsize=9.6)
     fig.tight_layout()
-    fig.savefig(os.path.join(OUT, "fig6_2_gain_region.png"), dpi=200, facecolor="white")
+    fig.savefig(os.path.join(OUT, "fig6_1_gain_region.png"), dpi=200, facecolor="white")
     plt.close(fig)
-    print("  -> fig6_2_gain_region.png")
+    print("  -> fig6_1_gain_region.png")
 
 
 def fig6_3():
@@ -172,7 +172,7 @@ def fig6_3():
     ax.set_xticklabels(cats)
     ax.set_ylabel("融合劣于最优单站的种子数（共 47 对）")
     ax.set_ylim(0, 31)
-    ax.set_title("模型集匹配的作用是让融合从经常有害变为几乎总是有益", fontsize=9.8)
+    ax.set_title("融合劣于最优单站的种子数（47 对配对，按三个统计口径）", fontsize=9.8)
     ax.legend(frameon=False, loc="upper left")
     ax.grid(axis="y", ls=":", color="0.9")
     fig.tight_layout()

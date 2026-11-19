@@ -56,7 +56,7 @@ def fig5_1():
 
     ax.add_patch(FancyBboxPatch((0.15, 2.35), 5.55, 3.55, boxstyle="round,pad=0.03",
                                 fc="#fcfcfc", ec="#95a5a6", lw=1.0, ls="--"))
-    ax.text(0.32, 5.55, '判定层：在全部共现区间上累积证据，回答"值不值得配"',
+    ax.text(0.32, 5.55, '判定层：在全部共现区间上累积证据，回答“是否值得配对”',
             fontsize=9.5, color="0.25")
 
     for txt, y in [("距离 $E_d$", 4.55), ("马氏 $E_m$", 3.90),
@@ -69,7 +69,7 @@ def fig5_1():
 
     ax.add_patch(FancyBboxPatch((6.05, 2.35), 5.80, 3.55, boxstyle="round,pad=0.03",
                                 fc="#fcfcfc", ec="#95a5a6", lw=1.0, ls="--"))
-    ax.text(6.22, 5.55, '指派层：在候选集上求全局最优，回答"配给谁"', fontsize=9.5, color="0.25")
+    ax.text(6.22, 5.55, '指派层：在候选集上求全局最优，回答“配给哪一条”', fontsize=9.5, color="0.25")
     box(ax, 6.25, 3.45, 2.10, 1.00, "匈牙利算法\n代价 = 马氏距离", fc="#f4ecf7", ec="#7d3c98", fs=8.8)
     box(ax, 8.85, 3.45, 1.95, 1.00, "一对一配对\n（互斥）", fc="#fdf2e9", ec="#b9770e", fs=8.8)
     arrow(ax, (5.22, 3.95), (6.23, 3.95))
@@ -77,7 +77,7 @@ def fig5_1():
 
     ax.text(6.0, 1.75, "分层的理由：判定与指派混在同一个综合分里时，", fontsize=9.2, ha="center", color="0.2")
     ax.text(6.0, 1.28, "两对分数接近的候选会被随机对调（成对交换）。", fontsize=9.2, ha="center", color="0.2")
-    ax.text(6.0, 0.62, "判定层只回答值不值得配，配给谁交还给最擅长的指派层。", fontsize=9.2, ha="center", color="0.2")
+    ax.text(6.0, 0.62, "判定层只回答是否值得配对，具体配给谁交由指派层统一求解。", fontsize=9.2, ha="center", color="0.2")
 
     fig.tight_layout()
     fig.savefig(os.path.join(OUT, "fig5_1_mewf_framework.png"), dpi=200, facecolor="white")
@@ -152,13 +152,17 @@ def fig5_3():
                 ax.text(i, (v + vals[i - 1]) / 2, "-%.1f" % hgt,
                         ha="center", va="center", fontsize=8.5, color="white")
             else:
-                ax.text(i + 0.33, (v + vals[i - 1]) / 2, "-%.1f" % hgt,
-                        ha="left", va="center", fontsize=8.5)
+                dx, ha = (-0.33, "right") if i == len(vals) - 1 else (0.33, "left")
+                ax.text(i + dx, (v + vals[i - 1]) / 2, "-%.1f" % hgt,
+                        ha=ha, va="center", fontsize=8.5)
     ax.set_xticks(range(len(vals)))
     ax.set_xticklabels(labels, fontsize=9)
-    ax.set_ylabel("加权代价 $C=5N_{wrong}+N_{missed}$")
+    ax.set_ylabel("加权代价 $C=5N_{wrong}+N_{missed}$（纵轴自 40 起）")
     ax.set_ylim(40, 75)
-    ax.set_title("优势来源的逐步拆解：指派 63%、门限 26%、软融合 11%", fontsize=10)
+    tot = vals[0] - vals[-1]
+    parts = [(vals[i - 1] - vals[i]) / tot for i in (1, 2, 3)]
+    ax.set_title("优势来源的逐步拆解：指派 %.0f%%、门限 %.0f%%、软融合 %.0f%%"
+                 % tuple(100 * p for p in parts), fontsize=10)
     ax.grid(axis="y", ls=":", color="0.9")
     fig.tight_layout()
     fig.savefig(os.path.join(OUT, "fig5_3_decompose.png"), dpi=200, facecolor="white")

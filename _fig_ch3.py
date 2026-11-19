@@ -41,12 +41,10 @@ for x, y, lab, off, ha in [(20, s_pts[0], "20 条：10.6 km", (10, 6), "left"),
     ax.annotate(lab, (x, y), textcoords="offset points", xytext=off, ha=ha,
                 fontsize=9, color="#1f6fb4")
 
-beam = [(4215, 1.29, "R1：4 215 条，1.29 km", (12, -8)),
-        (5454, 2.16, "R2：5 454 条，2.16 km", (12, 18))]
-for x, y, lab, off in beam:
-    ax.plot(x, y, "^", color="#c0392b", ms=7, zorder=4)
-    ax.annotate(lab, (x, y), textcoords="offset points", xytext=off,
-                fontsize=9, color="#c0392b", ha="left", va="center")
+beam = [(4215, 1.29, "R1 波束内 4 215 条：1.29 km"),
+        (5454, 2.16, "R2 波束内 5 454 条：2.16 km")]
+for x, y, lab in beam:
+    ax.plot(x, y, "^", color="#c0392b", ms=7, zorder=4, label=lab)
 
 ax.axhline(2.35, color="0.45", ls="--", lw=1.2)
 ax.text(4.2, 2.52, "计入电离层漂移后的可达精度 2.35 km", fontsize=8.5, color="0.35")
