@@ -1,0 +1,20 @@
+{
+  "source_document": "../文稿撰写/开题报告.docx",
+  "source_document_sha256": "a86a20485b6f0bda4290f5a51600c824bfefb794ea1ee51b817fe7ba7e10d2df",
+  "assets": [
+    {
+      "figure": "fig:ch1_principle",
+      "output": "Pictures/fig1_1_principle.png",
+      "member": "word/media/image2.png",
+      "original_caption": "双照射源外辐射雷达系统示意图",
+      "image_sha256": "823e6c83383287973597ed43e2fcb8f62ac03215711368b285dccd3a3d884961",
+      "pixels": [
+        13333,
+        7500
+      ],
+      "processing": "原始 PNG 字节直接复制；未裁切、未重采样、未更改文字或色彩",
+      "scope": "双源被动探测基本原理；共用接收端示意，不代表本文实验站点布设",
+      "reproduce": "python _extract_ch1_assets.py"
+    }
+  ]
+}
