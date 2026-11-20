@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
-"""对合并后的 论文全文.md 按 md2word-workflow 规范做综合检查。
+"""直接检查唯一正文 新稿/论文全文.md；保留工具名以便追溯。
 
 覆盖：YAML/标题层级(7个一级标题)/列表引用分割线/公式/图表/交叉引用/数据口径/语言风格。
-所有检查均在合并后的单一文件上进行，跨章标签与引用可正确解析。
+所有检查均在完整正文上进行，不读取分章文件，不执行合并。
 """
 import os
 import re
 import sys
 
-BASE = r"D:/Desktop/毕设相关/AAA毕业论文撰写/格式排版"
+BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOC = os.path.join(BASE, "论文全文.md")
 
 YAML_EXPECT = [
@@ -108,8 +108,8 @@ for mt in re.finditer(r"!\[([^\]]*)\]\(([^)]+)\)", txt):
     if re.search(r"图\s*\d+[-–.]\d+", cap) or re.match(r"^图\s*\d+", cap.strip()):
         add("FIGCAP_NUM", f"图注含编号: {cap[:40]}")
     fp = os.path.join(BASE, path)
-    if not path.startswith("新稿/Pictures/"):
-        add("FIG_PATH", f"合并稿图片必须位于新稿/Pictures：{path}")
+    if not path.startswith("Pictures/"):
+        add("FIG_PATH", f"正文图片须相对于新稿目录使用Pictures/：{path}")
     if not os.path.exists(fp):
         add("FIG_MISSING", f"图片不存在: {path}")
 
