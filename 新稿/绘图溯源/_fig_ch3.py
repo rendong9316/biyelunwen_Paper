@@ -18,7 +18,7 @@ plt.rcParams["font.sans-serif"] = [FONT]
 plt.rcParams["axes.unicode_minus"] = False
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, "Pictures", "fig3_1_crlb_vs_n.png")
+OUT = os.path.normpath(os.path.join(HERE, "..", "Pictures", "fig3_1_crlb_vs_n.png"))
 
 SR = 10.0          # sigma_R, km
 CV_NAT = 0.2155    # 全国走廊 CV(s)

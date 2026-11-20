@@ -15,7 +15,7 @@
 
 复现：
   cd 格式排版
-  python _fig_ch2_new.py
+  python 新稿/绘图溯源/_fig_ch2_new.py
 """
 import os
 import csv
@@ -37,7 +37,7 @@ plt.rcParams["axes.unicode_minus"] = False
 plt.rcParams["font.size"] = 10
 
 BASE = r"D:/Desktop/毕设相关/AAA毕业论文撰写"
-OUT = os.path.join(BASE, "格式排版", "Pictures")
+OUT = os.path.join(BASE, "格式排版", "新稿", "Pictures")
 SCENE = os.path.join(BASE, "文稿撰写", "data", "adsb_ns", "scene_fr24_all.csv")
 os.makedirs(OUT, exist_ok=True)
 

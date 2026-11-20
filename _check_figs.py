@@ -13,10 +13,11 @@
 import os
 import re
 import struct
+import sys
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 MD = os.path.join(BASE, "新稿")
-PIC = os.path.join(BASE, "Pictures")
+PIC = os.path.join(MD, "Pictures")
 MANIFEST = os.path.join(MD, "图源清单.md")
 CHAPS = ["ch1.md", "ch2.md", "ch3.md", "ch4.md", "ch5.md", "ch6.md", "ch7.md"]
 
@@ -56,9 +57,11 @@ def main():
         refs = RE_REF.findall(txt)
 
         for seq, (cap, rel, label) in enumerate(imgs, 1):
-            # md 中的相对路径以「格式排版」为根（图脚本的输出目录即 Pictures/）
-            full = os.path.normpath(os.path.join(BASE, rel))
+            # 章节位于新稿目录，Pictures/... 按章节所在目录解析。
+            full = os.path.normpath(os.path.join(MD, rel))
             no = "图%d-%d" % (ci, seq)
+            if not rel.startswith("Pictures/"):
+                problems.append("%s 图片路径不在章节规定目录：%s" % (no, rel))
             if label in declared:
                 problems.append("%s 标签重复：%s（已见于第%d章）"
                                 % (no, label, declared[label][0]))
@@ -111,17 +114,14 @@ def main():
         if alltxt.count("[@fig:%s]" % label) == 0:
             problems.append("图%d-%d（%s）声明了但正文从未引用" % (ci, seq, label))
 
-    # 重复图目录检测：新稿/Pictures 若存在且不完整，pandoc 会优先命中它而静默丢图
-    dup = os.path.join(MD, "Pictures")
-    if os.path.isdir(dup):
-        miss = [v[2] for v in declared.values()
-                if not os.path.exists(
-                    os.path.join(dup, os.path.relpath(os.path.join(BASE, v[2]),
-                                                       BASE)))]
-        problems.append("存在重复图目录 新稿/Pictures，其中缺 %d 张新稿用图%s"
-                        % (len(miss),
-                           "：" + "、".join(os.path.basename(m) for m in miss)
-                           if miss else ""))
+    # 只有新稿/Pictures为正式目录；根目录或溯源目录不应重新生成同名文件。
+    for forbidden in (os.path.join(BASE, "Pictures"),
+                      os.path.join(MD, "绘图溯源", "Pictures")):
+        if os.path.isdir(forbidden):
+            files = [name for name in os.listdir(forbidden)
+                     if os.path.isfile(os.path.join(forbidden, name))]
+            if files:
+                problems.append("错误目录仍有图片文件：%s（%d个）" % (forbidden, len(files)))
 
     print("-" * 96)
     print("声明图片 %d 张，标签 %d 个，唯一文件 %d 个"
@@ -134,7 +134,8 @@ def main():
             print("  ! " + p)
     else:
         print("\n全部通过：文件齐全、格式合法、编号连续、标签闭合、清单已登记。")
+    return 1 if problems else 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

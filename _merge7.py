@@ -6,6 +6,7 @@
 - 每章恰好一个一级标题（# 第X章 ...），全文共 7 个一级标题；
 - 不加入"参考文献"等任何额外一级标题（新稿正文无任何 [@文献] 引用）；
 - 章内二至四级标题、公式/图/表标签与交叉引用原样保留；
+- 图片源文件统一位于 新稿/Pictures：章节引用 Pictures/...，根目录合并稿自动转为 新稿/Pictures/...；
 - 章与章之间以一个空行分隔。
 """
 import os
@@ -47,6 +48,8 @@ for ch in CHS:
     if n_fix:
         body = body.replace("\\\\ ", "\\\\")
         print(f"  {ch}: 清理矩阵换行后空格 {n_fix} 处")
+    # 源章节相对于“新稿”引用图片；根目录合并稿只调整路径，不改图注与标签。
+    body = re.sub(r'(!\[[^\]]*\]\()Pictures/', r'\1新稿/Pictures/', body)
     parts.append(body)
 
 if yaml_block is None:

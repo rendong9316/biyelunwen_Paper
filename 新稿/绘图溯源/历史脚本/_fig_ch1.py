@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""生成第1章插图：全文研究框架"""
+"""历史复现脚本，仅向新稿/Pictures/历史输出。\n历史复现脚本，仅向新稿/Pictures/历史输出，禁止用于覆盖当前正式图。\n\n生成第1章插图：全文研究框架"""
 import os
 import matplotlib
 matplotlib.use('Agg')
@@ -12,7 +12,7 @@ plt.rcParams['font.size'] = 10.5
 plt.rcParams['figure.dpi'] = 300
 
 BASE = r"D:/Desktop/毕设相关/AAA毕业论文撰写/格式排版"
-OUT = os.path.join(BASE, "Pictures")
+OUT = os.path.join(BASE, "新稿", "Pictures", "历史")
 C_BLUE, C_RED, C_GREEN, C_ORANGE, C_PURPLE, C_GRAY = \
     '#2471a3', '#c0392b', '#1e8449', '#d68910', '#7d3c98', '#7f8c8d'
 

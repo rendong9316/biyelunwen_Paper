@@ -13,7 +13,7 @@
 
 复现：
   cd 格式排版
-  python _fig_ch6.py
+  python 新稿/绘图溯源/_fig_ch6.py
 """
 import os
 import csv
@@ -33,7 +33,7 @@ plt.rcParams["axes.unicode_minus"] = False
 plt.rcParams["font.size"] = 10
 
 BASE = r"D:/Desktop/毕设相关/AAA毕业论文撰写"
-OUT = os.path.join(BASE, "格式排版", "Pictures")
+OUT = os.path.join(BASE, "格式排版", "新稿", "Pictures")
 AUD = os.path.join(BASE, "文稿撰写", "_analysis")
 C_RED, C_BLUE, C_GREEN, C_ORANGE, C_GRAY, C_PURPLE = (
     "#c0392b", "#2471a3", "#1e8449", "#d68910", "#7f8c8d", "#7d3c98")

@@ -1,6 +1,6 @@
 """从用户提供的 Word 材料直接提取绪论原理图，并记录可复现来源。
 
-在格式排版目录执行：python _extract_ch1_assets.py
+在格式排版目录执行：python 新稿/绘图溯源/_extract_ch1_assets.py
 仅复制明确选择的图片，不改写源 Word；不提取公式图片或旧算法流程。
 """
 from hashlib import sha256
@@ -12,10 +12,10 @@ from zipfile import ZipFile
 
 from PIL import Image
 
-BASE = Path(__file__).resolve().parent
+BASE = Path(__file__).resolve().parents[2]
 SOURCE = BASE.parent / "文稿撰写" / "开题报告.docx"
-OUTPUT = BASE / "Pictures" / "fig1_1_principle.png"
-PROVENANCE = BASE / "新稿" / "ch1_asset_sources.json"
+OUTPUT = BASE / "新稿" / "Pictures" / "fig1_1_principle.png"
+PROVENANCE = Path(__file__).resolve().parent / "ch1_asset_sources.json"
 MEMBER = "word/media/image2.png"
 ORIGINAL_CAPTION = "双照射源外辐射雷达系统示意图"
 NS = {"w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"}
@@ -69,7 +69,7 @@ def main():
             "pixels": dimensions,
             "processing": "原始 PNG 字节直接复制；未裁切、未重采样、未更改文字或色彩",
             "scope": "双源被动探测基本原理；共用接收端示意，不代表本文实验站点布设",
-            "reproduce": "python _extract_ch1_assets.py",
+            "reproduce": "python 新稿/绘图溯源/_extract_ch1_assets.py",
         }],
     }
     PROVENANCE.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

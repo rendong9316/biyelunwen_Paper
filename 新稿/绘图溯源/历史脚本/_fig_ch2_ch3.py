@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""生成第2、3章插图（共12张）"""
+"""历史复现脚本，仅向新稿/Pictures/历史输出，禁止用于覆盖当前正式图。\n\n生成第2、3章插图（共12张）"""
 import os, csv, math
 import numpy as np
 import matplotlib
@@ -15,7 +15,7 @@ plt.rcParams['axes.linewidth'] = 0.9
 plt.rcParams['figure.dpi'] = 300
 
 BASE = r"D:/Desktop/毕设相关/AAA毕业论文撰写/格式排版"
-OUT = os.path.join(BASE, "Pictures")
+OUT = os.path.join(BASE, "新稿", "Pictures", "历史")
 AUD = r"D:/Desktop/毕设相关/AAA毕业论文撰写/文稿撰写/single_target_with-turn/_audit"
 DATA = r"D:/Desktop/毕设相关/AAA毕业论文撰写/文稿撰写/single_target_with-turn/data/adsb"
 os.makedirs(OUT, exist_ok=True)

@@ -108,6 +108,8 @@ for mt in re.finditer(r"!\[([^\]]*)\]\(([^)]+)\)", txt):
     if re.search(r"图\s*\d+[-–.]\d+", cap) or re.match(r"^图\s*\d+", cap.strip()):
         add("FIGCAP_NUM", f"图注含编号: {cap[:40]}")
     fp = os.path.join(BASE, path)
+    if not path.startswith("新稿/Pictures/"):
+        add("FIG_PATH", f"合并稿图片必须位于新稿/Pictures：{path}")
     if not os.path.exists(fp):
         add("FIG_MISSING", f"图片不存在: {path}")
 

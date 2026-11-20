@@ -12,7 +12,8 @@ FONT = next((f for f in _c if f in _a), "DejaVu Sans")
 plt.rcParams["font.sans-serif"] = [FONT]
 plt.rcParams["axes.unicode_minus"] = False
 
-HERE = os.path.dirname(os.path.abspath(__file__))
+PROJECT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+HERE = os.path.join(PROJECT, "文稿撰写", "_analysis")
 rows = list(csv.DictReader(open(os.path.join(HERE, "e7_h_mismatch.csv"), encoding="utf-8")))
 
 def agg(arm, key):
@@ -51,12 +52,8 @@ axes[1].annotate("9.0 -> 30.1 km", xy=(40, 30.1), xytext=(16, 22),
                  arrowprops=dict(arrowstyle="->", color="#c0392b"), color="#c0392b", fontsize=9)
 
 fig.tight_layout()
-out = os.path.join(HERE, "fig_e7_h_mismatch.png")
+out = os.path.join(PROJECT, "格式排版", "新稿", "Pictures", "fig3_2_e7_mismatch.png")
+os.makedirs(os.path.dirname(out), exist_ok=True)
 fig.savefig(out, dpi=200)
-# 正文用的是 格式排版/Pictures/fig3_2_e7_mismatch.png，直接落盘，避免手工复制
-_pic = os.path.normpath(os.path.join(HERE, "..", "..", "格式排版", "Pictures",
-                                     "fig3_2_e7_mismatch.png"))
-os.makedirs(os.path.dirname(_pic), exist_ok=True)
-fig.savefig(_pic, dpi=200)
+plt.close(fig)
 print("saved", out)
-print("saved", _pic)

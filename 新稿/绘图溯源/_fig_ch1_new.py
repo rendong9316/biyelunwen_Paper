@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """绪论理论分析框架与研究技术路线；不包含章节导览或实验结果。
 
-复现：在格式排版目录执行 python _fig_ch1_new.py。
+复现：在格式排版目录执行 python 新稿/绘图溯源/_fig_ch1_new.py。
 原理图由 _extract_ch1_assets.py 从用户材料逐字节提取。
 """
 from pathlib import Path
@@ -22,8 +22,8 @@ INK = "#" + COLOR_BLACK
 PAPER = "#" + COLOR_WHITE
 LINE_SPACING = 1.25
 DPI = 250
-BASE = Path(__file__).resolve().parent
-OUT = BASE / "Pictures"
+BASE = Path(__file__).resolve().parents[2]
+OUT = BASE / "新稿" / "Pictures"
 
 available = {font.name for font in fm.fontManager.ttflist}
 for required in (FONT_WEST, FONT_CN):
