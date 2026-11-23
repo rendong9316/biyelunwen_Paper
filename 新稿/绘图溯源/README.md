@@ -11,7 +11,8 @@
 | 第3章配准流程、可辨识性和转弯航迹图 | `python 新稿/绘图溯源/_fig_ch3_registration.py` |
 | 第3章配准演示数据准备 | `python 新稿/绘图溯源/prepare_ch3_turn.py`；再以 MATLAB R2023a 运行 `export_ch3_registration.m` |
 | 第3章虚高失配对照图 | `python 新稿/绘图溯源/plot_e7.py` |
-| 第4章两幅图 | `python 新稿/绘图溯源/_fig_ch4.py` |
+| 第4章结构、地图与误差时序四图 | `python 新稿/绘图溯源/_fig_ch4_filtering.py` |
+| 第4章50种子单站对照 | MATLAB R2023a 调用 `export_ch4_filtering(50)`；详见 `数据/第四章/README.md` |
 | 第5章三幅图 | `python 新稿/绘图溯源/_fig_ch5.py` |
 | 第6章三幅图 | `python 新稿/绘图溯源/_fig_ch6.py` |
 

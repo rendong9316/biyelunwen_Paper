@@ -1,0 +1,25 @@
+{
+  "matlab_version": "9.14.0.2206163 (R2023a)",
+  "seeds": [
+    41001,
+    41050
+  ],
+  "sample_seed": 41001,
+  "bootstrap_seed": 20261124,
+  "bootstrap_repetitions": 10000,
+  "measurement": "当前UKF的球面观测函数，真实和假定虚高均300km，零残余配准偏差",
+  "source_hashes": {
+    "格式排版\\新稿\\绘图溯源\\export_ch4_filtering.m": "a8363bfb2fe56a0124049bb2b790285e2442d258263ab99fa7f793cc9ab0af90",
+    "格式排版\\新稿\\绘图溯源\\_fig_ch4_filtering.py": "03994777e4bd471fc48b2560e7d384976433197f7d67c2d8a3e6e326f5898d9b",
+    "格式排版\\新稿\\绘图溯源\\prepare_ch4_map.py": "4445e314f0257e1f69eddaf754ff62d5fd7679976bbedc7eab2f2067aaf91860",
+    "格式排版\\新稿\\绘图溯源\\数据\\第三章\\turn_reference.csv": "023b0b2c4f4927b5c89b7e41a81e977412ebc8dccbbb1c7238af86b49177b6ff",
+    "文稿撰写\\single_target_with-turn\\config\\params_coverage_online.m": "cc9ca7cdd0871725023ff23b7d57c3b6329807c330e1f68be33b31fe36671ef7",
+    "文稿撰写\\single_target_with-turn\\config\\simulation_params_oracle.m": "20a0b82d80fba0ee0168d2ab6ffec533e5307854a9212af1a2504706e1531908",
+    "文稿撰写\\single_target_with-turn\\ukf\\ukf_jichu.m": "36b1ccd9891c5b99548fc636cbfcf53498f2a1a14bc7eedda9366fc14d6ebaed",
+    "文稿撰写\\single_target_with-turn\\ukf\\ukf_imm.m": "65bbb43bf959468127bc5b7e90a0b40e056047c6002ca89a983a65149d0f5226",
+    "文稿撰写\\single_target_with-turn\\ukf\\radar_params.m": "d4e4960a8762dae1188a7398cf9d2747a6a38ad0d857444e71cdd4c1d5be9d69",
+    "文稿撰写\\single_target_with-turn\\simulation\\bistatic_inverse_solver.m": "34fc4482cf27bab78101e7f7344326e974f1e26dbcfbd586b57d095a08b0d81c",
+    "文稿撰写\\single_target_with-turn\\tracker\\run_oracle_tracker_sequence.m": "b1093bd681f52644a6b7a3c0067607d1869ee3a162451d41e1fd10ccee1d6dfd",
+    "文稿撰写\\single_target_with-turn\\tracker\\trackStarter_logic_oracle.m": "f7c95480b61558819cce68682e9ff499c0f9560c387905c60e8dd2f1c50866ee"
+  }
+}
