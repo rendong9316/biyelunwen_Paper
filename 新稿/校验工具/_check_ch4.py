@@ -46,7 +46,39 @@ def main():
     for rel,sha in meta['source_hashes'].items():
         p=BASE.parents[1]/rel
         assert hashlib.sha256(p.read_bytes()).hexdigest()==sha, f'源码或输入发生变化: {rel}'
-    print('PASS：600条记录，50个配对种子、共同帧、嵌套命中、固定图示、汇总及来源哈希一致。')
+    # 正文现用选定参数 q=20 的独立试验；上述600条仅留作历史溯源检查。
+    formal=DATA/'诊断/validate_candidate'
+    f=pd.read_csv(formal/'monte_carlo.csv')
+    assert len(f)==800 and not f.failed.any()
+    assert not f.duplicated(['scene','pd','seed','method']).any()
+    assert set(f.seed)==set(range(43001,43051))
+    for scene in ['straight','turn','adsb','adsb_holdout']:
+        a=pd.read_csv(formal/f'{scene}_CV_UKF_demo.csv')
+        b=pd.read_csv(formal/f'{scene}_IMM_UKF_demo.csv')
+        for key in ['hit','reference_lon','reference_lat','raw_lon','raw_lat','raw_error_km']:
+            assert np.allclose(a[key],b[key],equal_nan=True)
+        common=a.lon.notna()&b.lon.notna();same=common&a.hit.astype(bool)
+        for name,frame in [('CV_UKF',a),('IMM_UKF',b)]:
+            rec=f[(f.scene==scene)&(f.pd==.6)&(f.seed==43001)&(f.method==name)].iloc[0]
+            assert rec.n_common==common.sum() and rec.n_same_hit==same.sum()
+            assert np.isclose(rec.position_rmse_hit_km,np.sqrt(np.mean(frame.pos_error_km[same]**2)))
+            assert np.isclose(rec.position_rmse_all_km,np.sqrt(np.mean(frame.pos_error_km[common]**2)))
+    reference=None
+    for suffix in ['002','02','2','20']:
+        scan=pd.read_csv(DATA/f'诊断/train_resample_q{suffix}/monte_carlo.csv')
+        assert len(scan)==40 and not scan.failed.any()
+        assert set(scan.seed)==set(range(42001,42021))
+        paired=scan.set_index(['scene','pd','seed','method']).sort_index()
+        cols=['n_frames','n_hits','n_output','n_common','n_same_hit','raw_rmse_common_km']
+        if reference is not None:
+            assert reference.index.equals(paired.index)
+            assert np.allclose(reference[cols],paired[cols])
+        reference=paired
+    manuscript=(BASE/'论文全文.md').read_text(encoding='utf-8')
+    ch4=manuscript.split('# 第4章',1)[1].split('# 第5章',1)[0]
+    for historical_word in ['原配置','候选配置','机动配置','原实现','修正后']:
+        assert historical_word not in ch4
+    print('PASS：正式800条方法记录及160条同实现扫参记录配对一致；固定效果图和历史600条来源检查通过。')
 
 
 if __name__=='__main__':

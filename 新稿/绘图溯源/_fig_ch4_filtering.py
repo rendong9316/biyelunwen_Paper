@@ -13,6 +13,7 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 HERE=Path(__file__).resolve().parent
 DATA=HERE/'数据/第四章'; OUT=HERE.parent/'Pictures'
+FILTER_DATA=DATA/'诊断/validate_candidate'  # 正式效果图统一采用选定参数 q=20 及完整预测协方差采样。
 BLUE,RED='#2471a3','#b74436'
 plt.rcParams.update({'font.family':['Times New Roman','SimSun'],'font.size':10.5,
     'axes.unicode_minus':False,'mathtext.fontset':'stix'})
@@ -81,7 +82,7 @@ def filter_line(ax,t,labels=False):
 
 
 def track_map(scene,title,output):
-    t=pd.read_csv(DATA/f'{scene}_IMM_UKF_demo.csv')
+    t=pd.read_csv(FILTER_DATA/f'{scene}_IMM_UKF_demo.csv')
     a=pd.concat([t.reference_lon,t.raw_lon,t.lon]);b=pd.concat([t.reference_lat,t.raw_lat,t.lat])
     # 固定量测种子；不依据误差挑选图示。
     bounds=[a.min()-.25,a.max()+.25,b.min()-.25,b.max()+.25]
@@ -118,7 +119,7 @@ def track_map(scene,title,output):
 def time_errors():
     fig,axes=plt.subplots(2,1,figsize=(9,5.6),sharex=False,layout='constrained')
     for ax,scene,title in zip(axes,['turn','adsb'],['（a）纯仿真转弯','（b）ADS-B 转弯轨迹']):
-        t=pd.read_csv(DATA/f'{scene}_IMM_UKF_demo.csv');c=pd.read_csv(DATA/f'{scene}_CV_UKF_demo.csv')
+        t=pd.read_csv(FILTER_DATA/f'{scene}_IMM_UKF_demo.csv');c=pd.read_csv(FILTER_DATA/f'{scene}_CV_UKF_demo.csv')
         x=t.elapsed_sec/60
         ax.scatter(x,t.raw_error_km,marker='o',s=10,facecolors='none',edgecolors='.55',label='逐点定位')
         ax.plot(x,c.pos_error_km,color=RED,ls='--',lw=1.1,label='CV-UKF')

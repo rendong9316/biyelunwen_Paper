@@ -1,4 +1,4 @@
-"""汇总参数选择与独立验证，保留原始负结果，不按验证结果再次选参。"""
+"""从同一递推实现的蒙特卡洛结果绘制过程噪声敏感性图，汇总独立性能评价。"""
 from pathlib import Path
 import json,hashlib
 import numpy as np
@@ -62,19 +62,36 @@ def main():
     pd.DataFrame(diff).to_csv(DATA/'validation_differences.csv',index=False)
     print(summary.loc[(slice(None),slice(None),.6,'IMM_UKF'),:].round(3).to_string())
     print(pd.DataFrame(diff).query('pd == .6').round(3).to_string(index=False))
-    old=pd.read_csv(DATA/'validate_baseline/adsb_IMM_UKF_demo.csv')
-    new=pd.read_csv(DATA/'validate_candidate/adsb_IMM_UKF_demo.csv')
-    assert np.allclose(old.raw_error_km,new.raw_error_km,equal_nan=True)
-    fig,ax=plt.subplots(2,1,figsize=(9,5.5),sharex=True,layout='constrained');x=new.elapsed_sec/60
-    ax[0].scatter(x,new.raw_error_km,s=13,edgecolors='.55',facecolors='none',label='逐点定位')
-    for t,label,color in [(old,'原配置','#b74436'),(new,'机动配置与重采样','#2471a3')]:
-        ax[0].plot(x,t.pos_error_km,label=label,color=color,lw=1.4)
-        ax[1].semilogy(x,t.nees,label=label,color=color,lw=1.3)
-    ax[0].set_ylabel('位置误差 / km');ax[1].set_ylabel('归一化状态误差平方')
-    ax[1].axhspan(.4844,11.1433,color='.93',zorder=0,label='单时刻名义95%参考区间')
-    ax[1].set_xlabel('相对时间 / min')
-    for axis in ax:axis.legend(ncol=3,fontsize=9);axis.grid(ls=':',alpha=.4)
-    fig.suptitle('独立验证种子下的滤波误差与不确定性诊断',fontsize=12)
+    sweep=[]
+    for suffix,q in [('002',.02),('02',.2),('2',2.),('20',20.)]:
+        folder=DATA/f'train_resample_q{suffix}'
+        cfg=loadmat(folder/'configuration.mat',simplify_cells=True)
+        assert bool(cfg['resample']) and np.isclose(float(cfg['q_psd']),q)
+        assert np.isclose(float(cfg['slow']),.05) and np.isclose(float(cfg['fast']),.2)
+        t=pd.read_csv(folder/'monte_carlo.csv')
+        assert set(t.seed)==set(range(42001,42021)) and not t.failed.any()
+        assert set(t.scene)=={'adsb'} and set(t.pd)=={.6}
+        for method,g in t.groupby('method'):
+            sweep.append(dict(q=q,method=method,runs=len(g),
+                rmse_hit=g.position_rmse_hit_km.mean(),rmse_sd=g.position_rmse_hit_km.std(),
+                raw=g.raw_rmse_common_km.mean(),nis=g.nis_mean.mean(),nees=g.nees_mean.mean(),
+                nees95=g.nees_coverage95.mean()))
+    sweep=pd.DataFrame(sweep)
+    sweep.to_csv(DATA/'q_sensitivity.csv',index=False)
+    g=sweep[sweep.method=='IMM_UKF'].sort_values('q');x=g.q.to_numpy()
+    fig,ax=plt.subplots(1,2,figsize=(9,3.7),layout='constrained')
+    ax[0].errorbar(x,g.rmse_hit,yerr=g.rmse_sd,color='#2471a3',marker='o',
+                   capsize=4,lw=1.4,label='IMM-UKF 均值及样本标准差')
+    ax[0].plot(x,g.raw,color='.45',ls='--',label='逐点定位均值')
+    ax[0].set(title='（a）位置估计精度',ylabel='有量测帧位置 RMSE / km')
+    for col,ref,label,color in [('nis',3,'NIS','#b74436'),('nees',4,'NEES','#2471a3')]:
+        ax[1].plot(x,g[col],marker='s' if col=='nis' else 'o',color=color,lw=1.3,label=f'{label} 均值')
+        ax[1].axhline(ref,color=color,ls=':',lw=1,label=f'{label} 理论参考值 {ref}')
+    ax[1].set(title='（b）不确定性统计',ylabel='归一化平方统计量均值')
+    for axis in ax:
+        axis.set_xscale('log');axis.set_xticks(x,labels=['0.02','0.2','2','20'])
+        axis.set_xlabel('过程噪声谱密度 q / (m²/s³)')
+        axis.legend(fontsize=8.5);axis.grid(ls=':',alpha=.4)
     fig.savefig(OUT/'fig4_filter_improvement.png',dpi=240,facecolor='white',bbox_inches='tight');plt.close(fig)
     print('PASS: 1600 validation results; paired samples and seed separation verified')
     sources=[HERE/'diagnose_ch4_filtering.m',HERE/'check_ch4_process_noise.m',HERE/'prepare_ch4_prototype.py',HERE/'prepare_ch4_validation.py',

@@ -2,7 +2,15 @@
 
 MATLAB R2023a（9.14.0.2206163）实际调用原工程 `ukf_jichu.m`、`ukf_imm.m`、`run_oracle_tracker_sequence.m` 及其初始化、确认和航迹管理函数。本轮没有修改研究工程源码。源代码哈希与依赖见 `provenance.json`，导出入口在上两级的 `export_ch4_filtering.m`。
 
-## 实验条件
+## 当前正文与正式图片使用的数据
+
+正文按“参数影响—参数选择—独立性能评价”组织。扫参只使用 `诊断/train_resample_q002`、`train_resample_q02`、`train_resample_q2`、`train_resample_q20` 四组，每组20种子、2方法，递推实现与模型集相同，仅改变q；`q_sensitivity.csv`保存均值、样本标准差和不确定性统计。
+
+选定q=20后，正式地图、时序图及性能表统一采用 `诊断/validate_candidate` 的800条方法记录，种子43001—43050，4场景、2检测概率、2方法。地图及时序固定使用43001；正文中的选定参数依据同时考虑位置精度和不确定性统计，不称为单纯RMSE最优。
+
+下文及历史文件名中的baseline、candidate、train为溯源标识，不是论文中的方法名称。根目录600条记录以及其他诊断组保留供复查，不再用作正式效果图或正文性能表的数据。
+
+## 历史实验条件
 
 使用覆盖互补配置的R1站、两种滤波方法（CV-UKF / IMM-UKF）、三个固定轨迹、两个实际命中概率（0.6 / 0.9）、种子41001—41050，共600个方法结果。基准检测概率仍是0.6，0.9仅为独立实验注入，滤波器内部检测先验保持0.6。轨迹种类与命中概率之间重复使用同一随机种子以形成配对，不将600行当作600个独立交通场景。
 
@@ -28,7 +36,7 @@ MATLAB R2023a（9.14.0.2206163）实际调用原工程 `ukf_jichu.m`、`ukf_imm.
 
 `prepare_ch4_prototype.py` 从当前研究源码生成隔离实验副本，只修正预测协方差加入加性过程噪声后量测Sigma点未同步重采样的问题，不修改 `文稿撰写/single_target_with-turn`。`check_ch4_process_noise.m` 的二阶矩检查记录原实现和隔离实现的相对协方差缺口。候选固定为 $q=20\mathrm{m^2/s^3}$、转弯率 ±0.05/±0.2°/s、完整预测协方差重采样；参数选择与独立验证之间由协议文件冻结。
 
-`诊断/validation_summary.csv`、`诊断/validation_differences.csv` 保存验证统计和以种子为单位的配对自助抽样区间；`诊断/diagnostic_source_hashes.json` 保存诊断脚本及隔离副本哈希。改进图只展示验证种子中的第一个固定样本，不根据误差挑选。
+`诊断/validation_summary.csv`、`诊断/validation_differences.csv` 保存验证统计和以种子为单位的配对自助抽样区间；`诊断/diagnostic_source_hashes.json` 保存诊断脚本及隔离副本哈希。正式参数敏感性图展示四档q的蒙特卡洛统计；正式地图及时序展示选定参数下首个固定评价种子，不根据误差挑选。
 
 ## 复现
 

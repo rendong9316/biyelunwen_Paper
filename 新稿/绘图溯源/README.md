@@ -13,7 +13,7 @@
 | 第3章虚高失配对照图 | `python 新稿/绘图溯源/plot_e7.py` |
 | 第4章结构、地图与误差时序四图 | `python 新稿/绘图溯源/_fig_ch4_filtering.py` |
 | 第4章50种子单站对照 | MATLAB R2023a 调用 `export_ch4_filtering(50)`；详见 `数据/第四章/README.md` |
-| 第4章过程噪声与实现诊断 | `python 新稿/绘图溯源/prepare_ch4_prototype.py`；MATLAB `check_ch4_process_noise`；独立验证由 `review_ch4_diagnostics.py` 汇总 |
+| 第4章过程噪声敏感性与独立性能评价 | `python 新稿/绘图溯源/prepare_ch4_prototype.py`；MATLAB `check_ch4_process_noise`；同实现四档q扫参及独立评价由 `review_ch4_diagnostics.py` 汇总；正式图采用q=20及种子43001 |
 | 第5章三幅图 | `python 新稿/绘图溯源/_fig_ch5.py` |
 | 第6章三幅图 | `python 新稿/绘图溯源/_fig_ch6.py` |
 
