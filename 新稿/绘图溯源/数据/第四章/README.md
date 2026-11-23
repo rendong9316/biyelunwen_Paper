@@ -4,11 +4,13 @@ MATLAB R2023a（9.14.0.2206163）实际调用原工程 `ukf_jichu.m`、`ukf_imm.
 
 ## 当前正文与正式图片使用的数据
 
-正文按“参数影响—参数选择—独立性能评价”组织。扫参只使用 `诊断/train_resample_q002`、`train_resample_q02`、`train_resample_q2`、`train_resample_q20` 四组，每组20种子、2方法，递推实现与模型集相同，仅改变q；`q_sensitivity.csv`保存均值、样本标准差和不确定性统计。
+当前选参网格为q=[0.02,0.2,1,2,3,4,5,6,8,10,12,16,20,30]，每档20种子42001—42020、2方法，递推实现与模型集相同，仅改变q；共560条方法结果。`q_sensitivity.csv`保存均值、样本标准差及不确定性统计。补跑入口为 `refine_ch4_q.m`，使用MATLAB R2023a。
 
-选定q=20后，正式地图、时序图及性能表统一采用 `诊断/validate_candidate` 的800条方法记录，种子43001—43050，4场景、2检测概率、2方法。地图及时序固定使用43001；正文中的选定参数依据同时考虑位置精度和不确定性统计，不称为单纯RMSE最优。
+查看加密结果前在 `诊断/refinement_protocol.json` 固定筛选规则：NIS均值在[2.25,3.75]且NEES均值在[3,5]时，取平均位置RMSE最低的q。25%容差仅用于工程筛选，不构成一致性检验。`review_ch4_diagnostics.py --select` 只读取选参数据，生成 `parameter_selection.json` 并保存协议和选参数据哈希；规则选得q=6。q=2的选参位置RMSE略低，正文明确这一取舍。
 
-下文及历史文件名中的baseline、candidate、train为溯源标识，不是论文中的方法名称。根目录600条记录以及其他诊断组保留供复查，不再用作正式效果图或正文性能表的数据。
+正式图表统一采用 `诊断/evaluate_dense_q6` 的800条方法记录，使用全新的种子44001—44050、4场景、2检测概率、2方法。地图和时序固定使用44001。冻结后由 `evaluate_ch4_selected.m` 读取参数运行评价，未将43001—43050的旧评价种子重复用于本轮最终评价。`final_summary.csv`、`final_differences.csv`保存正文汇总和配对自助抽样结果。
+
+下文以及baseline、candidate、train等历史文件名仅作溯源标识，不是论文方法名称。根目录600条记录、四档粗扫结果和旧q=20的独立评价保留复查，不用于当前正式效果图与性能表。加密扫参和评价全过程均未修改MATLAB研究工程源码。
 
 ## 历史实验条件
 
@@ -53,3 +55,7 @@ python 新稿/校验工具/_check_figs.py
 ```
 
 已保存局部地理数据，日常绘图不需要重新下载。`_fig_ch4.py` 为兼容入口，调用新脚本；旧逐目标尾部图留在图片历史目录，当前正文不再以其证明重尾分布或匀速滤波极限。
+
+## 当前加密参数研究的复现顺序
+
+从格式排版目录调用MATLAB R2023a：先运行 `refine_ch4_q`，再执行 `python 新稿/绘图溯源/review_ch4_diagnostics.py --select` 冻结参数；随后用R2023a运行 `evaluate_ch4_selected`，最后运行 `review_ch4_diagnostics.py` 与 `_fig_ch4_filtering.py` 生成正式图表。粗扫四组历史结果已入库，无需重复计算。当前正文由 `final_summary.csv` 汇总，根目录 `summary.csv` 仅为历史结果。

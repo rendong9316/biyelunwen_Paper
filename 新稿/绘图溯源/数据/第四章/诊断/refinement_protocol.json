@@ -1,0 +1,16 @@
+{
+  "purpose": "加密过程噪声敏感性分析，并在查看加密结果前固定参数选择准则",
+  "q_grid": [0.02, 0.2, 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 30],
+  "parameter_seeds": [42001, 42020],
+  "parameter_scene": "adsb",
+  "parameter_detection_probability": 0.6,
+  "method": "IMM_UKF",
+  "turn_rates_deg_s": [0.05, 0.2],
+  "resample": true,
+  "selection_rule": "NIS均值在[2.25,3.75]且NEES均值在[3,5]的参数中，选择有量测帧位置RMSE跨试验均值最小者；完全并列时取较小q。若不存在满足者，则不自动选取。",
+  "tolerance_interpretation": "均值相对理论参考值的25%工程容差，用于统一筛选，不是卡方显著性检验或协方差一致性的通过标准。",
+  "evaluation_seeds": [44001, 44050],
+  "evaluation_scenes": ["straight", "turn", "adsb", "adsb_holdout"],
+  "evaluation_detection_probabilities": [0.6, 0.9],
+  "evaluation_rule": "参数由选参组确定并写入选择记录后，再用未使用过的种子评价；不依据评价结果返回修改参数。"
+}

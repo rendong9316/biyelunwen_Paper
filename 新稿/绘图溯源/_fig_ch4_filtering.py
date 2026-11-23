@@ -13,7 +13,8 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 HERE=Path(__file__).resolve().parent
 DATA=HERE/'数据/第四章'; OUT=HERE.parent/'Pictures'
-FILTER_DATA=DATA/'诊断/validate_candidate'  # 正式效果图统一采用选定参数 q=20 及完整预测协方差采样。
+SELECTION=json.loads((DATA/'诊断/parameter_selection.json').read_text(encoding='utf-8'))
+FILTER_DATA=DATA/'诊断'/SELECTION['evaluation_folder']
 BLUE,RED='#2471a3','#b74436'
 plt.rcParams.update({'font.family':['Times New Roman','SimSun'],'font.size':10.5,
     'axes.unicode_minus':False,'mathtext.fontset':'stix'})

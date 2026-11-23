@@ -1,0 +1,48 @@
+{
+  "q": 6.0,
+  "slow": 0.05,
+  "fast": 0.2,
+  "resample": true,
+  "parameter_seeds": [
+    42001,
+    42020
+  ],
+  "evaluation_seeds": [
+    44001,
+    44050
+  ],
+  "evaluation_folder": "evaluate_dense_q6",
+  "sample_seed": 44001,
+  "selection_rule": "NIS均值在[2.25,3.75]且NEES均值在[3,5]的参数中，选择有量测帧位置RMSE跨试验均值最小者；完全并列时取较小q。若不存在满足者，则不自动选取。",
+  "protocol_sha256": "8dba1286dad43484732c65b425c16d1379aadbaaefff7844f65a4a91f8166e8e",
+  "parameter_data_sha256": {
+    "train_resample_q002\\monte_carlo.csv": "418cbf7fb98669a289a3e657bf80a4ed237daf295904e29477771a6481753043",
+    "train_resample_q002\\configuration.mat": "8f27cb10c2d779485e47beb78c87544a507ec661a96354c71be3fac7faaded46",
+    "train_resample_q02\\monte_carlo.csv": "46cbbd9ead3af02c247457433087809d5d87b4cbfd000c41e9348d34ecd9cf1f",
+    "train_resample_q02\\configuration.mat": "c95015ed2dd916df5d1aa6151269dd06228146a5e46ba8e9d345bf6e45af1336",
+    "train_resample_q1\\monte_carlo.csv": "4ddf5573659b031b3c8bfeaf7180b48eb4ff5ed56f5907f0b371c8f7853088ca",
+    "train_resample_q1\\configuration.mat": "63faad0a8d9d359dcd2cea287e3946b85f82112e95e117ae6f03dd1f097f1aca",
+    "train_resample_q2\\monte_carlo.csv": "9a0ce1ca99ec04a294369cb9b762882159e9cbafb16a58621347362d82aae145",
+    "train_resample_q2\\configuration.mat": "88f2526e5aa2c3c9878e68d90352315742a6e967d3f0014965867ad7acad684f",
+    "train_resample_q3\\monte_carlo.csv": "0e9f15ecbbf5618f216164a9f795adc6097aa19b89a0a25aad423475885bd029",
+    "train_resample_q3\\configuration.mat": "f970f3817fd0de2bcf8cbd264a284ffb146006031e54c360bf55b0224c99fab1",
+    "train_resample_q4\\monte_carlo.csv": "1b17f1bea6fa20d3efab5c2bd3ff9a17e7ec97320fca688a08f4f6885943a2f2",
+    "train_resample_q4\\configuration.mat": "865945d896e69a0d1bcf15ebf206b0e73bd2f534b96dd48f4901f998fb6bdd31",
+    "train_resample_q5\\monte_carlo.csv": "49561c08edc1c0630f11104be5a7fdacb60948be9c32555118b8b1a940aa9726",
+    "train_resample_q5\\configuration.mat": "ec16e47a07e6bc66395c462fce07f617092bf0639e5a7a7362dad25609a07769",
+    "train_resample_q6\\monte_carlo.csv": "bd14e3dbc29c246ac9238bb7b42b722317bb551b4221320609dfb76c43deba7b",
+    "train_resample_q6\\configuration.mat": "b19aad13ad611736459797144210f6cae42d89a3d22d2bdb458c172978a9c93d",
+    "train_resample_q8\\monte_carlo.csv": "40c2cc2ecd0c80fce97c17420cea7573f5424cda6ab90cc3baf6bf02ecf2a669",
+    "train_resample_q8\\configuration.mat": "45c997f35ada27f910eb63afb3ff52bdfa65c66c2478a9087b02ae572f64fa43",
+    "train_resample_q10\\monte_carlo.csv": "3532afdaab791950dd0ae4ffc83b3171293e767928692c31194268bfa3646e91",
+    "train_resample_q10\\configuration.mat": "e7dfb0fa671dbc41fa0b605025ee4436196601a5fdb4683c48f0441d4a4120ee",
+    "train_resample_q12\\monte_carlo.csv": "bc6639aebe490f0958166ab14aa0933aba841662c7fcd90fcca94bc8ee200b2a",
+    "train_resample_q12\\configuration.mat": "6854fafd1d58710903f0111daf768a3eb45381c3a6cf21ad3675e9cce036ffca",
+    "train_resample_q16\\monte_carlo.csv": "7de80e2d5ec1a769cf44ba07e7f6c2e2ca433bd7eed193d5887ebf4786f06c1d",
+    "train_resample_q16\\configuration.mat": "bb45dd6c3eed95479c66f221f64401ddd54a5723544d360ab2e2992d28784c2c",
+    "train_resample_q20\\monte_carlo.csv": "4ebd20b45c7eeaaedc7fd99b762776565a75ecbcd996a41c36201747d3c9e9b5",
+    "train_resample_q20\\configuration.mat": "f858fb7b09004d4a9c4e91598a6b3264a5e13c98becd36fe661c78e66e1ff1ee",
+    "train_resample_q30\\monte_carlo.csv": "cec0e65c5894675a36e774e9745685713450c0ac80db56904b10017be49e167f",
+    "train_resample_q30\\configuration.mat": "70a29dc4dd4d7262e83033357cc1fbf557321be27f2c92db57b6e816aa82b31e"
+  }
+}

@@ -3,7 +3,9 @@
   "check_ch4_process_noise.m": "db26f3be3ef847ca7589b36cf669458a7d10c93c6031d1cdedacbbb90af2cb56",
   "prepare_ch4_prototype.py": "2f7f1c4f32f57daa17f30b6aa46d68f7f6185f8b0c1fbcf878a47d6d4a91b4e4",
   "prepare_ch4_validation.py": "e5fabfa8b4b33e931eb63ef11a08e5343746ce7e036fcdfccdd2968362be55de",
-  "review_ch4_diagnostics.py": "09b96400c71cdcbceec95714e40415f20864c67384a3bd21d35a27e7ec6225cc",
+  "review_ch4_diagnostics.py": "dd3498a69740291ac02ae7429c8831d6025629608fbf23f363adee1066051d75",
+  "refine_ch4_q.m": "bf81944ed9b79f26648bf528c2df1ad285b305647ebd2ea6238e0bcaec245e94",
+  "evaluate_ch4_selected.m": "7c1a587a3ba53c5c61039ac3ea99b7a3768bb55502fbb45e6a198c675cbcc897",
   "实验实现\\第四章\\ukf_dispatch.m": "2d1d4eeed217c47ffb5418121df79cb1a18ab835bfdeedd63d6a29e5ebf812ac",
   "实验实现\\第四章\\ukf_imm_ch4.m": "1c75061fe95b45fb1ce9989a4f919e4a7b33b3644c5520a943846d7f19f7ca6a",
   "实验实现\\第四章\\ukf_jichu_ch4.m": "5d1a7320a7266eea2ad3547573c5fef4b953445d12de22f9a6be32c0a6119922"
