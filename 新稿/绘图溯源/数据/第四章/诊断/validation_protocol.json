@@ -1,0 +1,16 @@
+{
+  "track": "T14342",
+  "n_samples": 66,
+  "start_utc": "2026-10-24 10:50:28",
+  "end_utc": "2026-10-24 11:22:58",
+  "source_sha256": "da739cc530f72029023a050d346cf41dc66f3d40f2eaab042aabf1686d041989",
+  "rule": "按已选身份取R1视场内最长连续段，不根据滤波误差选择；不用于训练",
+  "frozen_candidate": {
+    "q": 20,
+    "slow": 0.05,
+    "fast": 0.2,
+    "resample": true
+  },
+  "training_seeds": "42001..42020",
+  "validation_seeds": "43001..43050"
+}

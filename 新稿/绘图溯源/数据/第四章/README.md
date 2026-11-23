@@ -18,9 +18,17 @@ MATLAB R2023a（9.14.0.2206163）实际调用原工程 `ukf_jichu.m`、`ukf_imm.
 
 直接定位与滤波比较：两种滤波器均有输出且有命中的共同帧。连续估计比较：两种滤波器均有输出的共同帧，包括预测帧。先按每个种子计算RMSE，再计算跨种子的均值与样本标准差。输出比例单独以整个参考序列作分母；没有用误差阈值剔除种子。初始化前的帧不纳入误差，但计入未输出比例。二维速度误差为东北速度向量之差的模，不是速度大小之差。NIS只统计更新帧，NEES只统计有效可逆协方差帧；名义区间覆盖率按各次运行先计算再平均。
 
-全部300组条件均起始成功。低命中条件下直线和纯仿真转弯各1次、ADS-B共3次重起；两方法生命周期相同。ADS-B条件下滤波误差未低于逐点定位，正文已保留此限制，不能将图片描述为普遍精度提升。
+全部300组基线条件均起始成功；独立验证的800组方法结果也均有输出。低命中条件下直线和纯仿真转弯各1次、ADS-B条件有少量重起；两方法在同一配置下生命周期相同。改进配置在两条ADS-B验证轨迹上低于逐点定位，但直线场景的IMM相对CV没有稳定优势，四维状态一致性仍有限，不能将结果推广为所有运动条件下的普遍精度提升。
 
 `map_background.geojson` 来自 Natural Earth 公共领域（Public Domain）的1:10m省级边界线和河流线，局部截取104—114°E、27—37°N；下载地址与原始shp哈希写在文件 `sources`。不含国界、不是导航或测绘成果。图片中文字以宋体显示，地图线条不参加计算。城市为近似位置标注，仅用于读图定位。
+
+## 诊断和独立验证
+
+`诊断/` 下的 `train_*` 是20个选参种子的隔离对照，`validate_baseline` 与 `validate_candidate` 是冻结参数后的独立验证，各含4种场景、2个检测概率、2种方法和50个种子。训练种子42001—42020与验证种子43001—43050不重叠；T14342附加轨迹的选择规则和原始场景哈希见 `validation_protocol.json`。
+
+`prepare_ch4_prototype.py` 从当前研究源码生成隔离实验副本，只修正预测协方差加入加性过程噪声后量测Sigma点未同步重采样的问题，不修改 `文稿撰写/single_target_with-turn`。`check_ch4_process_noise.m` 的二阶矩检查记录原实现和隔离实现的相对协方差缺口。候选固定为 $q=20\mathrm{m^2/s^3}$、转弯率 ±0.05/±0.2°/s、完整预测协方差重采样；参数选择与独立验证之间由协议文件冻结。
+
+`诊断/validation_summary.csv`、`诊断/validation_differences.csv` 保存验证统计和以种子为单位的配对自助抽样区间；`诊断/diagnostic_source_hashes.json` 保存诊断脚本及隔离副本哈希。改进图只展示验证种子中的第一个固定样本，不根据误差挑选。
 
 ## 复现
 
@@ -30,6 +38,7 @@ MATLAB R2023a（9.14.0.2206163）实际调用原工程 `ukf_jichu.m`、`ukf_imm.
 & 'C:\Program Files\MATLAB\R2023a\bin\matlab.exe' -batch "addpath('新稿/绘图溯源'); export_ch4_filtering(50)"
 python 新稿/绘图溯源/prepare_ch4_map.py
 python 新稿/绘图溯源/_fig_ch4_filtering.py
+python 新稿/绘图溯源/review_ch4_diagnostics.py
 python 新稿/校验工具/_check_ch4.py
 python 新稿/校验工具/_check_merged.py
 python 新稿/校验工具/_check_figs.py
