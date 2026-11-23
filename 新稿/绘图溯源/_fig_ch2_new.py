@@ -10,7 +10,7 @@
 产出
   Pictures/fig2_1_layout.png        两种布设的平面几何（扇区、距离窗、走廊）
   Pictures/fig2_2_group_range.png   双基地群距离路径示意与群距离曲线
-  Pictures/fig2_3_density.png       adsb_ns_all 的并发数与视场内外目标数
+  Pictures/fig2_3_density.png       由 _fig_scene_and_registration.py 生成覆盖状态统计
   Pictures/fig2_4_tracks.png        航迹平面分布与覆盖分段
 
 复现：
@@ -270,5 +270,5 @@ if __name__ == "__main__":
     fig2_1()
     fig2_2()
     rows = read_scene()
-    print("  场景统计：均值 %.1f 峰值 %d  R1均值 %.1f  R2均值 %.1f" % fig2_3(rows))
+    # 图 2-3 由独立脚本生成，避免覆盖当前采用的覆盖状态统计图。
     fig2_4(rows)

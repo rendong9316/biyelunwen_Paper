@@ -6,7 +6,8 @@
 | ---- | ---- |
 | 提取原理图并校验来源哈希 | `python 新稿/绘图溯源/_extract_ch1_assets.py` |
 | 绘制绪论的黑白理论框架和技术路线 | `python 新稿/绘图溯源/_fig_ch1_new.py` |
-| 第2章四幅图 | `python 新稿/绘图溯源/_fig_ch2_new.py` |
+| 第2章布设、传播模型与航迹分布 | `python 新稿/绘图溯源/_fig_ch2_new.py` |
+| 第2章覆盖状态图与第3章配准原图 | `python 新稿/绘图溯源/_fig_scene_and_registration.py` |
 | 第3章标校下界图 | `python 新稿/绘图溯源/_fig_ch3.py` |
 | 第3章虚高失配对照图 | `python 新稿/绘图溯源/plot_e7.py` |
 | 第4章两幅图 | `python 新稿/绘图溯源/_fig_ch4.py` |
