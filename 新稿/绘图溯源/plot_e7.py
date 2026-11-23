@@ -6,7 +6,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
-_c = ["SimHei", "Microsoft YaHei", "SimSun"]
+_c = ["SimSun", "Microsoft YaHei", "SimHei"]
 _a = {f.name for f in fm.fontManager.ttflist}
 FONT = next((f for f in _c if f in _a), "DejaVu Sans")
 plt.rcParams["font.sans-serif"] = [FONT]
@@ -33,7 +33,7 @@ fig, axes = plt.subplots(1, 2, figsize=(11, 4.2))
 
 for ax, key, ylab, title in [
     (axes[0], "gain_pct", "融合增益 (%)", "(a) 融合增益随虚高失配衰减"),
-    (axes[1], "rmse_fused", "融合 RMSE (km)", "(b) 融合精度随虚高失配退化"),
+    (axes[1], "rmse_fused", "融合位置均方根误差 / km", "（b）虚高失配与融合位置误差"),
 ]:
     for arm, lab, c, m in [("none", "不标定", "#c0392b", "o"),
                            ("mle3", "三参数标定", "#1f6fb4", "s")]:
@@ -46,9 +46,9 @@ for ax, key, ylab, title in [
     ax.grid(alpha=0.3, ls="--")
     ax.legend(fontsize=9)
 
-axes[0].annotate("41.9% -> 8.5%", xy=(40, 8.5), xytext=(10, 10.5),
+axes[0].annotate("41.9% 降至 8.5%", xy=(40, 8.5), xytext=(10, 10.5),
                  arrowprops=dict(arrowstyle="->", color="#c0392b"), color="#c0392b", fontsize=9)
-axes[1].annotate("9.0 -> 30.1 km", xy=(40, 30.1), xytext=(16, 22),
+axes[1].annotate("9.0 km 增至 30.1 km", xy=(40, 30.1), xytext=(16, 22),
                  arrowprops=dict(arrowstyle="->", color="#c0392b"), color="#c0392b", fontsize=9)
 
 fig.tight_layout()

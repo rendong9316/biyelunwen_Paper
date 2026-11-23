@@ -1,0 +1,13 @@
+{
+  "source": "文稿撰写\\data\\adsb_ns\\scene_fr24_all.csv",
+  "source_sha256": "da739cc530f72029023a050d346cf41dc66f3d40f2eaab042aabf1686d041989",
+  "calibration_source": "文稿撰写\\single_target_with-turn\\data\\adsb\\calib_utc12_18.csv",
+  "calibration_sha256": "3560389af65c555f73b6fa1b1d56d06b447a7a2fbb706a0836e5ced0f729a46f",
+  "track_id": "T06677",
+  "start_utc": "2026-10-24 07:55:28",
+  "end_utc": "2026-10-24 08:33:28",
+  "n_samples": 77,
+  "heading_change_deg": 43.01692609865885,
+  "selection": "R1视场内、时间连续30 s、至少35点、UTC12–18之外、身份不在标校表；取首尾五步航向中位数变化最大的段",
+  "note": "仅选择几何形态，尚未生成噪声或计算配准效果；雷达量测由模型生成"
+}

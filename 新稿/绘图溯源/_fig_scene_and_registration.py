@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-"""按场景目标帧绘制覆盖组成，并保留原始配准示例图。
+"""按场景目标帧绘制覆盖组成。
 
 从格式排版目录运行：python 新稿/绘图溯源/_fig_scene_and_registration.py
-配准图为专利 V1 示例原图，使用其本来的单基地近似，不能作为当前主实验结果。
+第三章配准图现由 _fig_ch3_registration.py 重绘，本脚本不再复制原图。
 """
 from collections import Counter
 from pathlib import Path
 import importlib.util
-import shutil
 
 import matplotlib
 matplotlib.use("Agg")
@@ -16,7 +15,6 @@ import matplotlib.pyplot as plt
 HERE = Path(__file__).resolve().parent
 OUT = HERE.parent / "Pictures"
 ROOT = HERE.parents[2]
-SOURCE = ROOT / "文稿撰写" / "时空配准专利dsv41" / "fig2_test_track.png"
 spec = importlib.util.spec_from_file_location("chapter2_figures", HERE / "_fig_ch2_new.py")
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
@@ -52,9 +50,7 @@ def main():
     OUT.mkdir(exist_ok=True)
     fig.savefig(OUT / "fig2_3_density.png", dpi=200, facecolor="white")
     plt.close(fig)
-    shutil.copyfile(SOURCE, OUT / "fig3_registration_demo.png")
     print("coverage counts:", dict(zip(labels, values)), "total:", total)
-    print("copied original registration illustration:", SOURCE)
 
 
 if __name__ == "__main__":
