@@ -1,0 +1,14 @@
+{
+  "online_assoc_compare_A.csv": {
+    "source": "文稿撰写/single_target_with-turn/results/assoc_compare/assoc_compare.csv",
+    "sha256": "c1350a7a225a5d3e959dd2e2440be1f3986b5fb7801219c8a85f3e921472f3d3"
+  },
+  "online_assoc_compare_B.csv": {
+    "source": "文稿撰写/single_target_with-turn/results/assoc_compare_opt/assoc_compare.csv",
+    "sha256": "99ab269975a74a6c36c9b39a5ef05eaeda16591d4efba98bd73f9f2ef3e70051"
+  },
+  "online_fr24_main_summary.txt": {
+    "source": "文稿撰写/single_target_with-turn/results/online_fr24_v3/summary.txt",
+    "sha256": "360267e04d5a79276a2bddde972c68b0e916cc3e9e44dc3ace3c3c0c4541cb73"
+  }
+}

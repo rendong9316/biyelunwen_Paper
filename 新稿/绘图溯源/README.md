@@ -15,6 +15,7 @@
 | 第4章50种子单站对照 | MATLAB R2023a 调用 `export_ch4_filtering(50)`；详见 `数据/第四章/README.md` |
 | 第4章过程噪声敏感性与独立性能评价 | `python 新稿/绘图溯源/prepare_ch4_prototype.py`；MATLAB `check_ch4_process_noise`；同实现14档q扫参由 `refine_ch4_q.m` 与 `review_ch4_diagnostics.py --select` 完成；`evaluate_ch4_selected.m`运行新独立评价；正式图采用q=6及种子44001 |
 | 第5章三幅图 | `python 新稿/绘图溯源/_fig_ch5.py` |
+| 第5章在线策略与确认规则复核 | `python 新稿/校验工具/_check_ch5_online.py`；源结果快照与校验哈希见 `数据/第五章/` |
 | 第6章三幅图 | `python 新稿/绘图溯源/_fig_ch6.py` |
 
 `ch1_asset_sources.json` 记录复用图片的源文档、媒体条目、原始像素和 SHA-256。全部正式图的来源及数据口径见上级目录的 `图源清单.md`。
