@@ -1,0 +1,5 @@
+case,n_frames,n_r1,n_r2,n_union,n_overlap,ceiling_ratio,formula_ratio,actual_ratio,implementation_pct,ct_len,birth_k,confirm_k
+S1_vertical,129,53,54,87,20,1.6111,1.6296,1.5690,97.38,91,25,65
+S2_diag45,84,35,65,72,28,1.1077,1.5692,1.0149,91.63,68,17,59
+S3_near,129,49,49,80,18,1.6327,1.6327,1.5283,93.61,81,30,67
+S4_far,129,57,59,92,24,1.5593,1.5932,1.5333,98.33,92,25,62

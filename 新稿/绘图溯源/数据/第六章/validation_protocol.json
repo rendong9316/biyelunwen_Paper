@@ -1,0 +1,21 @@
+{
+  "frozen_before_model_run": true,
+  "matlab": "R2023a",
+  "filter": "第四章完整预测协方差重采样",
+  "process_accel_psd_m2_s3": 6,
+  "model_scene": "adsb_0002",
+  "model_seeds": [46011,46030],
+  "model_groups_deg_s": [[0.7,1.5],[0.05,0.2]],
+  "coverage_cases": ["vertical","diag45","near","far"],
+  "coverage_seeds": [46101,46105],
+  "system_scene": "adsb_ns_all",
+  "system_seeds": [46201,46203],
+  "association": "dualgate;6/8",
+  "fusion": "SCC",
+  "primary_comparison": "两种模型集均正确双源输出的相同目标-历元交集",
+  "additional_reporting": "各组全部正确双源帧的系统级精度和可用性",
+  "correlation": "同时报告中心化池化相关系数与未中心化归一化交叉误差矩",
+  "uncertainty": "以随机种子为单位的配对均值差及t区间；不以时间帧作为独立样本",
+  "coverage_realization": "同一真值时间窗与几何并集内最长单个系统编号的正确输出帧数/几何并集帧数",
+  "no_parameter_selection_on_evaluation": true
+}

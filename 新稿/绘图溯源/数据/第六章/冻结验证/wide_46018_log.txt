@@ -1,0 +1,37 @@
+场景 adsb_0002：42 条航迹，240 帧（dt=30s）
+  配准[mean] 命中缓存 dd695660
+R1 偏差估计: dr=48656m, da=-3.00deg (真实: 20000m, -3.00deg)
+R2 偏差估计: dr=15759m, da=3.50deg (真实: -15000m, 3.50deg)
+
+========== PAPER METRICS (online): adsb_0002 ==========
+targets=42  frames=240
+
+[1] RMSE (km)
+  R1_only   n= 1305  rms=  8.308
+  R2_only   n= 1317  rms=  9.618
+  SCC       n=  959  rms=  5.382
+
+[2] TRACK LENGTH (frames)
+  R1: total=43  real=43 (mean=35.6)  false=0
+  R2: total=42  real=42 (mean=36.9)  false=0
+  系统航迹: 目标 42，比值均值 0.983 中位 1.000，延长 2 缩短 10
+
+[3] MATCHING
+  pairs=42  correct=41  wrong=1  missed=2  precision=97.6%  recall=97.6%
+
+[4] FALSE TRACK RATE
+  R1=0.0%  R2=0.0%
+
+[5] FUSION COVERAGE
+  both=1165  R1_only=538  R2_only=157  coverage=62.6%
+
+[6] COMMON-FRAME RMSE (fair comparison)
+  n=919  R1=6.840  R2=7.603  fused=5.328  gain_vs_best_single=22.1%
+
+[7] CONSISTENCY / LIMITS
+  NEES: R1=2.14  R2=1.21   [consistent ~2]
+  rho(R1,R2)=+0.184
+  theoretical: indep=5.085  optimal(rho)=5.529  actual=5.328
+====================================================
+
+主链路完成：240 帧

@@ -1,0 +1,37 @@
+场景 single_straight：1 条航迹，84 帧（dt=30s）
+  配准模式: none（不做偏差校正）
+R1 偏差估计: dr=0m, da=0.00deg (真实: 0m, 0.00deg)
+R2 偏差估计: dr=0m, da=0.00deg (真实: 0m, 0.00deg)
+
+========== PAPER METRICS (online): single_straight ==========
+targets=1  frames=84
+
+[1] RMSE (km)
+  R1_only   n=   33  rms=  9.645
+  R2_only   n=   68  rms=  4.213
+  SCC       n=   27  rms=  4.946
+
+[2] TRACK LENGTH (frames)
+  R1: total=1  real=1 (mean=33.0)  false=0
+  R2: total=1  real=1 (mean=68.0)  false=0
+  系统航迹: 目标 1，比值均值 1.015 中位 1.015，延长 1 缩短 0
+
+[3] MATCHING
+  pairs=1  correct=1  wrong=0  missed=0  precision=100.0%  recall=100.0%
+
+[4] FALSE TRACK RATE
+  R1=0.0%  R2=0.0%
+
+[5] FUSION COVERAGE
+  both=27  R1_only=1  R2_only=41  coverage=39.1%
+
+[6] COMMON-FRAME RMSE (fair comparison)
+  n=27  R1=9.458  R2=2.508  fused=4.946  gain_vs_best_single=-97.3%
+
+[7] CONSISTENCY / LIMITS
+  NEES: R1=1.20  R2=0.27   [consistent ~2]
+  rho(R1,R2)=+0.663
+  theoretical: indep=2.424  optimal(rho)=2.214  actual=4.946
+====================================================
+
+主链路完成：84 帧

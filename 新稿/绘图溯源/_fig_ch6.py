@@ -1,187 +1,245 @@
 # -*- coding: utf-8 -*-
-"""第6章插图：增益机理链、闭式有效域、负增益种子计数。
+"""生成第六章融合机理、种子配对结果与覆盖上界图。
 
-数据来源
-  - 图6-1 结构示意 + 第4章模型集实验、§12.6.5 机理表（池化 rho、NEES）的数值
-  - 图6-2 闭式：SCC 方差比 V/sigma1^2 = k^2/(1+k^2) + 2*rho*k^3/(1+k^2)^2
-  - 图6-3 _analysis/mc_online_chain.csv（47 对，基线/优化）负增益计数
-
-产出
-  Pictures/fig6_1_gain_region.png
-  Pictures/fig6_2_mechanism.png
-  Pictures/fig6_3_negative_gain.png
-
-复现：
-  cd 格式排版
-  python 新稿/绘图溯源/_fig_ch6.py
+输入数据为本目录下“数据/第六章”的冻结快照，正式图片输出到相邻 Pictures。
 """
-import os
-import csv
+from pathlib import Path
 
-import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import matplotlib.font_manager as fm
+import numpy as np
+import pandas as pd
+import json
 from matplotlib.patches import FancyBboxPatch
-
-_c = ["SimHei", "Microsoft YaHei", "SimSun"]
-_a = {f.name for f in fm.fontManager.ttflist}
-FONT = next((f for f in _c if f in _a), "DejaVu Sans")
-plt.rcParams["font.sans-serif"] = [FONT]
-plt.rcParams["axes.unicode_minus"] = False
-plt.rcParams["font.size"] = 10
-
-BASE = r"D:/Desktop/毕设相关/AAA毕业论文撰写"
-OUT = os.path.join(BASE, "格式排版", "新稿", "Pictures")
-AUD = os.path.join(BASE, "文稿撰写", "_analysis")
-C_RED, C_BLUE, C_GREEN, C_ORANGE, C_GRAY, C_PURPLE = (
-    "#c0392b", "#2471a3", "#1e8449", "#d68910", "#7f8c8d", "#7d3c98")
+from review_ch6_validation import RUNS, vectors
 
 
-def box(ax, x, y, w, h, txt, fc="#ebf5fb", ec="#2471a3", fs=8.6):
-    ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.02",
-                                fc=fc, ec=ec, lw=1.0))
-    ax.text(x + w / 2, y + h / 2, txt, ha="center", va="center", fontsize=fs)
-
-
-def arrow(ax, p, q, color="#2c3e50"):
-    ax.annotate("", xy=q, xytext=p,
-                arrowprops=dict(arrowstyle="-|>", color=color, lw=1.0,
-                                shrinkA=0, shrinkB=0))
-
-
-def fig6_2():
-    fig, ax = plt.subplots(figsize=(10.4, 4.6))
-    ax.set_xlim(0, 12)
-    ax.set_ylim(0, 6.2)
-    ax.axis("off")
-
-    box(ax, 0.25, 2.55, 2.55, 1.30,
-        "真实机动分布\n中位 0.012 °/s\np90 0.229、p99 0.660 °/s", fs=8.4)
-    box(ax, 3.35, 2.55, 2.35, 1.30,
-        "模型集设计\nCT 0.7/1.5 →\n0.05/0.2°/s", fc="#fef9e7", ec="#b9770e", fs=8.4)
-    arrow(ax, (2.82, 3.20), (3.33, 3.20))
-
-    ys = [4.55, 3.20, 1.85]
-    labels = [
-        ("单站残差减小\nR1 -13.8%、R2 -8.1%（不显著）", "#eafaf1", "#1e8449"),
-        ("共同模型误差减小\n池化 ρ 0.520 → 0.224", "#fdedec", "#c0392b"),
-        ("协方差更可信\nNEES 4.49→2.87、2.94→1.53", "#f4ecf7", "#7d3c98"),
-    ]
-    for y, (t, fc, ec) in zip(ys, labels):
-        box(ax, 6.35, y, 3.05, 1.00, t, fc=fc, ec=ec, fs=8.2)
-        arrow(ax, (5.72, 3.20), (6.33, y + 0.50))
-
-    box(ax, 9.95, 2.20, 1.85, 2.00,
-        "融合增益\nRMSE 1.7→17.4%\n中位 7.3→15.6%\np90 -2.6→14.8%",
-        fc="#ebf5fb", ec="#2471a3", fs=8.2)
-    for y in ys:
-        arrow(ax, (9.42, y + 0.50), (9.93, 3.20))
-
-    ax.text(6.0, 1.30,
-            "三条通道同时改善，但决定增益大小的是中间一条：两站误差的相关系数。",
-            fontsize=9.0, ha="center", color="0.2")
-    ax.text(6.0, 0.85,
-            "逆方差加权下，融合增益可由 $\\rho$ 与两源方差比 $k$ 的闭式（6.2 节）直接给出。",
-            fontsize=9.0, ha="center", color="0.2")
-
-    fig.tight_layout()
-    fig.savefig(os.path.join(OUT, "fig6_2_mechanism.png"), dpi=200, facecolor="white")
-    plt.close(fig)
-    print("  -> fig6_2_mechanism.png")
-
-
-def v_scc(rho, k):
-    """SCC（逆方差加权）在相关系数 rho 下的方差比 V/sigma1^2。"""
-    return k ** 2 / (1 + k ** 2) + 2 * rho * k ** 3 / (1 + k ** 2) ** 2
+HERE = Path(__file__).resolve().parent
+DATA = HERE / "数据" / "第六章"
+OUT = HERE.parent / "Pictures"
+plt.rcParams.update({
+    "font.family": ["Times New Roman", "SimSun"],
+    "mathtext.fontset": "stix",
+    "axes.unicode_minus": False,
+    "font.size": 10,
+    "figure.facecolor": "white",
+    "axes.facecolor": "white",
+})
 
 
 def fig6_1():
-    rho = np.linspace(0, 1, 401)
+    """静态逆方差加权模型的理论有效边界。"""
+    rho = np.linspace(0, 1, 500)
     ks = [1.0, 1.4, 2.0, 3.0]
-    colors = [C_BLUE, C_GREEN, C_ORANGE, C_RED]
-
-    fig, ax = plt.subplots(figsize=(7.4, 4.4))
-    for k, c in zip(ks, colors):
-        ax.plot(rho, v_scc(rho, k), color=c, lw=1.6, label="$k=%.1f$" % k)
-        # 与 V=1 的交点
-        lo, hi = 0.0, 1.0
-        for _ in range(60):
-            mid = 0.5 * (lo + hi)
-            if v_scc(mid, k) < 1.0:
-                lo = mid
-            else:
-                hi = mid
-        ax.plot([lo], [1.0], "o", ms=4.5, color=c)
-        if lo < 0.99:
-            ax.annotate("%.2f" % lo, (lo, 1.0), textcoords="offset points",
-                        xytext=(3, -12), fontsize=8, color=c, va="top")
-
-    ax.axhline(1.0, color="0.45", ls="--", lw=1.0)
-    ax.text(0.02, 1.03, "无增益界线 $V=\\sigma_1^2$", fontsize=8.5, color="0.35")
-
-    # 工作点：63 段基线（k≈1.4，池化 rho=0.172）
-    ax.plot([0.172], [v_scc(0.172, 1.4)], "s", ms=7, mfc="white",
-            mec=C_GREEN, mew=1.6)
-    ax.annotate("63 段工作点\n$\\rho$=0.172, $k$=1.4", (0.172, v_scc(0.172, 1.4)),
-                textcoords="offset points", xytext=(10, -26), fontsize=8.5)
-    ax.text(0.42, 0.575,
-            "10 对实验按其自身方差比的有效上界：\n$k$=1.18 时 0.73，$k$=1.26 时 0.64",
-            fontsize=8.4, color="0.25")
-
-    ax.set_xlabel("两站误差相关系数 $\\rho$")
-    ax.set_ylabel("融合方差比 $\\sigma_f^2/\\sigma_1^2$")
-    ax.set_xlim(0, 1)
-    ax.set_ylim(0.55, 1.45)
-    ax.grid(ls=":", color="0.9")
-    ax.legend(frameon=False, loc="upper left", fontsize=9,
-              title="方差比 $k=\\sigma_2/\\sigma_1$", title_fontsize=8.5)
-    ax.set_title("逆方差加权融合的方差随相关系数上升；曲线与虚线之交点即该方差比下的有效上界", fontsize=9.6)
+    styles = ["-", "--", "-.", ":"]
+    fig, ax = plt.subplots(figsize=(7.5, 4.5))
+    for k, style in zip(ks, styles):
+        ratio = k**2 / (1 + k**2) + 2 * rho * k**3 / (1 + k**2)**2
+        limit = (1 + k**2) / (2 * k**3)
+        ax.plot(rho, ratio, color="black", ls=style, lw=1.7,
+                label=f"k={k:g}，边界 rho={min(limit, 1):.2f}")
+        if limit <= 1:
+            ax.plot(limit, 1, marker="o", ms=4, color="black")
+    ax.axhline(1, color="0.45", ls="--", lw=1.0, label="与较优单站方差相等")
+    ax.fill_between(rho, 0.5, 1, color="0.92", zorder=0)
+    ax.text(0.97, 0.63, "融合方差较小区域", ha="right", color="0.25")
+    ax.set(xlim=(0, 1), ylim=(0.5, 1.5),
+           xlabel="两站误差相关系数 rho（理论模型）",
+           ylabel="融合方差 / 较优单站方差",
+           title="误差相关性与两站精度差异共同限定融合有效范围")
+    ax.grid(ls=":", color="0.86")
+    ax.legend(frameon=False, fontsize=8.5, loc="upper left")
     fig.tight_layout()
-    fig.savefig(os.path.join(OUT, "fig6_1_gain_region.png"), dpi=200, facecolor="white")
+    fig.savefig(OUT / "fig6_1_gain_region.png", dpi=220)
     plt.close(fig)
-    print("  -> fig6_1_gain_region.png")
+
+
+def _box(ax, xy, wh, text, fs=9.2):
+    x, y = xy
+    w, h = wh
+    ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="square,pad=0.02",
+                                facecolor="white", edgecolor="black", linewidth=1.2))
+    ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", fontsize=fs)
+
+
+def fig6_2():
+    """白底黑框呈现模型集与融合表现之间的待检验传导关系。"""
+    fig, ax = plt.subplots(figsize=(10.2, 3.6))
+    ax.set_xlim(0, 12)
+    ax.set_ylim(0, 4.2)
+    ax.axis("off")
+    _box(ax, (0.2, 1.45), (2.25, 1.25), "ADS-B轨迹\n运动与转弯特征")
+    _box(ax, (3.15, 1.45), (2.4, 1.25), "IMM 转弯率模型集\n与实际机动匹配程度")
+    _box(ax, (6.25, 2.55), (2.35, 1.10), "单站误差与\n位置协方差诊断")
+    _box(ax, (6.25, 0.65), (2.35, 1.10), "两站误差相关性\n中心化与非中心化指标")
+    _box(ax, (9.4, 1.45), (2.35, 1.25), "在线状态融合\n精度与负增益频次")
+    arrows = [((2.48, 2.08), (3.12, 2.08)), ((5.58, 2.15), (6.22, 3.02)),
+              ((5.58, 1.95), (6.22, 1.22)), ((8.63, 3.02), (9.37, 2.40)),
+              ((8.63, 1.20), (9.37, 1.75))]
+    for start, end in arrows:
+        ax.annotate("", xy=end, xytext=start,
+                    arrowprops={"arrowstyle": "->", "color": "black", "lw": 1.1})
+    ax.text(6, 0.12,
+            "实验检验：在同一在线链路和配对随机种子下调整模型集，分别观测误差诊断与融合结果",
+            ha="center", fontsize=9)
+    fig.tight_layout()
+    fig.savefig(OUT / "fig6_2_mechanism.png", dpi=220, bbox_inches="tight")
+    plt.close(fig)
 
 
 def fig6_3():
-    # 负增益种子计数直接由 47 对结果文件复算（§12.6.4）
-    rows = list(csv.DictReader(open(os.path.join(AUD, "mc_online_chain.csv"), encoding="utf-8")))
-    by = {}
-    for r in rows:
-        by.setdefault(r["cfg"], {})[int(r["seed"])] = r
-    base_cfg, opt_cfg = "base_07_15", "opt_005_02"
-    common = sorted(set(by[base_cfg]) & set(by[opt_cfg]))
-    keys = ["gain_rmse_pct", "gain_med_pct", "gain_p90_pct"]
-    cats = ["RMSE", "中位", "p90"]
-    base = [sum(1 for s in common if float(by[base_cfg][s][k]) < 0) for k in keys]
-    opt = [sum(1 for s in common if float(by[opt_cfg][s][k]) < 0) for k in keys]
-    print("    负增益计数 base=%s opt=%s (n=%d)" % (base, opt, len(common)))
-
-    x = np.arange(len(cats))
-    w = 0.34
-    fig, ax = plt.subplots(figsize=(6.6, 4.0))
-    ax.bar(x - w / 2, base, w, color=C_RED, label="模型集 0.7 / 1.5")
-    ax.bar(x + w / 2, opt, w, color=C_GREEN, label="模型集 0.05 / 0.2")
-    for i in range(len(cats)):
-        ax.text(x[i] - w / 2, base[i] + 0.5, "%d" % base[i], ha="center",
-                fontsize=9, color=C_RED)
-        ax.text(x[i] + w / 2, opt[i] + 0.5, "%d" % opt[i], ha="center",
-                fontsize=9, color=C_GREEN)
-    ax.set_xticks(x)
-    ax.set_xticklabels(cats)
-    ax.set_ylabel("融合劣于最优单站的种子数（共 47 对）")
-    ax.set_ylim(0, 31)
-    ax.set_title("融合劣于最优单站的种子数（47 对配对，按三个统计口径）", fontsize=9.8)
-    ax.legend(frameon=False, loc="upper left")
-    ax.grid(axis="y", ls=":", color="0.9")
-    fig.tight_layout()
-    fig.savefig(os.path.join(OUT, "fig6_3_negative_gain.png"), dpi=200, facecolor="white")
+    """冻结参数下，正确双源共同目标历元上的种子配对结果。"""
+    df = pd.read_csv(DATA / "model_common_epochs.csv")
+    baseline = df[df.group == "wide"].set_index("seed")
+    matched = df[df.group == "cruise"].set_index("seed")
+    seeds = sorted(set(baseline.index) & set(matched.index))
+    if len(seeds) != 20:
+        raise ValueError(f"预期20个共同随机种子，实际为{len(seeds)}")
+    specs = [("gain_rmse", "RMSE增益（%）"),
+             ("gain_median", "中位误差增益（%）"),
+             ("gain_p90", "90分位误差增益（%）")]
+    fig, axes = plt.subplots(1, 3, figsize=(10.5, 4.2), sharex=True)
+    for ax, (column, title) in zip(axes, specs):
+        a = baseline.loc[seeds, column].to_numpy(float)
+        b = matched.loc[seeds, column].to_numpy(float)
+        for y0, y1 in zip(a, b):
+            ax.plot([0, 1], [y0, y1], color="0.78", lw=0.7, zorder=1)
+        ax.scatter(np.zeros(len(a)), a, s=19, color="0.35", zorder=2,
+                   label="转弯率0.7/1.5°/s")
+        ax.scatter(np.ones(len(b)), b, s=24, marker="^", facecolors="white",
+                   edgecolors="black", linewidths=0.8, zorder=3,
+                   label="巡航匹配0.05/0.2°/s")
+        ax.axhline(0, color="black", lw=0.8, ls="--")
+        ax.set_title(title, fontsize=9.5)
+        ax.set_xticks([0, 1], ["较宽转弯率\n模型集", "巡航匹配\n模型集"])
+        ax.grid(axis="y", ls=":", color="0.88")
+        ax.text(0.04, 0.96,
+                f"负增益：{int((a < 0).sum())}/{len(seeds)} → {int((b < 0).sum())}/{len(seeds)}",
+                transform=ax.transAxes, va="top", fontsize=8.2)
+        lo,hi=min(a.min(),b.min(),0),max(a.max(),b.max())
+        ax.set_ylim(lo-max((hi-lo)*.12,2),hi+max((hi-lo)*.2,2))
+        ax.scatter([0,1],[a.mean(),b.mean()],marker='D',s=42,color='#276b91',zorder=4)
+        ax.plot([0,1],[a.mean(),b.mean()],color='#276b91',lw=1.6,zorder=3)
+    axes[0].set_ylabel("相对同一配置下较优单站的误差改善比例")
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="lower center", ncol=2, frameon=False,
+               bbox_to_anchor=(0.5, -0.01), fontsize=8.5)
+    fig.suptitle("两组模型集在共同目标历元上的融合收益（20个配对随机种子）", y=1.02)
+    fig.tight_layout(rect=(0, 0.09, 1, 0.98))
+    fig.savefig(OUT / "fig6_3_negative_gain.png", dpi=220, bbox_inches="tight")
     plt.close(fig)
-    print("  -> fig6_3_negative_gain.png")
+
+
+def fig6_4():
+    """展示覆盖互补的在线实现长度比与几何并集上界。"""
+    df = pd.read_csv(DATA / "coverage_common_window.csv").groupby('case').mean(numeric_only=True)
+    df=df.loc[['vertical','diag45','near','far']]
+    labels = ["垂直穿越", "45°斜穿", "近距穿越", "远距穿越"]
+    if len(df) != 4:
+        raise ValueError("覆盖上界扫描数据应包含四种穿越工况")
+    y = np.arange(len(df))
+    upper = df.geometry_ceiling_ratio.to_numpy(float)
+    actual = df.geometric_normalized_system.to_numpy(float)
+    fig, ax = plt.subplots(figsize=(7.8, 3.9))
+    for i, (lo, hi) in enumerate(zip(actual, upper)):
+        ax.plot([lo, hi], [i, i], color="0.45", lw=1.5, zorder=1)
+    ax.scatter(actual, y, marker="o", s=46, color="black", label="系统有效输出（归一化）", zorder=3)
+    ax.scatter(upper, y, marker="s", s=42, facecolors="white", edgecolors="black",
+               label="覆盖并集几何上界", zorder=3)
+    for i, pct in enumerate(df.union_realization):
+        ax.text(upper[i] + 0.012, i, f"覆盖实现率 {100*pct:.1f}%", va="center", fontsize=8.3)
+    ax.set_yticks(y, labels)
+    ax.invert_yaxis()
+    ax.set_xlim(0.95, 1.85)
+    ax.set_xlabel("帧数 / 较长单站几何覆盖帧数（统一分母）")
+    ax.set_title("同一覆盖时间窗内的系统有效输出与几何并集（每工况5种子）")
+    ax.grid(axis="x", ls=":", color="0.86")
+    ax.legend(frameon=False, loc="upper left", bbox_to_anchor=(0,1.0), fontsize=8.5)
+    fig.tight_layout()
+    fig.savefig(OUT / "fig6_4_coverage_ceiling.png", dpi=220, bbox_inches="tight")
+    plt.close(fig)
+
+
+def _background(ax,bounds):
+    geo=json.loads((HERE/'数据/第四章/map_background.geojson').read_text(encoding='utf-8'))
+    def draw(g):
+        kind=g['type']
+        if kind=='LineString':
+            a=np.asarray(g['coordinates']);ax.plot(a[:,0],a[:,1],color='.82',lw=.45,zorder=0)
+        elif kind=='MultiLineString':
+            for a in g['coordinates']:draw({'type':'LineString','coordinates':a})
+        elif kind=='GeometryCollection':
+            for part in g['geometries']:draw(part)
+    for f in geo['features']:draw(f['geometry'])
+    ax.set_xlim(bounds[:2]);ax.set_ylim(bounds[2:])
+    # 保持局部经纬物理尺度，通过扩展数据范围填满地图面板，避免拉伸地理形状。
+    ax.set_aspect(1/np.cos(np.deg2rad(np.mean(bounds[2:]))),adjustable='datalim')
+    ax.set(xlabel='经度 / °E',ylabel='纬度 / °N')
+    ax.grid(ls=':',color='.9',zorder=0)
+    for name,x,y in [('宜昌',111.29,30.69),('荆州',112.24,30.34),('襄阳',112.14,32.04),
+                      ('重庆',106.55,29.56),('达州',107.50,31.21),('汉中',107.02,33.07)]:
+        if bounds[0]<x<bounds[1] and bounds[2]<y<bounds[3]:
+            ax.plot(x,y,'.',color='.6',ms=2.5)
+            ax.annotate(name,(x,y),xytext=(3,3),textcoords='offset points',fontsize=7,color='.5')
+
+
+def _demo(label,seed,target,filename,title):
+    df=pd.read_csv(RUNS/f'{label}_{seed}_samples.csv')
+    df=df[df.target.eq(target)].sort_values('frame').copy()
+    df=df[df.geometry_r1.eq(1)|df.geometry_r2.eq(1)].copy()
+    t=(df.time_sec-df.time_sec.iloc[0])/60
+    fig=plt.figure(figsize=(10,6.5))
+    gs=fig.add_gridspec(2,2,width_ratios=[1,1.35],height_ratios=[1.8,1],hspace=.42,wspace=.30)
+    ax=fig.add_subplot(gs[:,0]);err=fig.add_subplot(gs[0,1]);time=fig.add_subplot(gs[1,1])
+    mid=(df.truth_lon.min()+df.truth_lon.max())/2
+    half=max((df.truth_lon.max()-df.truth_lon.min())/2+.35,1.2)
+    bounds=[mid-half,mid+half,df.truth_lat.min()-.35,df.truth_lat.max()+.35]
+    _background(ax,bounds)
+    colors={'r1':'#276b91','r2':'#ae563d','system':'#256d4c'}
+    ax.plot(df.truth_lon,df.truth_lat,'--',color='.15',lw=1.2,label='参考轨迹')
+    for name,desc,style in [('r1','R1局部航迹',':'),('r2','R2局部航迹','-.'),('system','系统航迹','-')]:
+        x=df[f'{name}_lon'].to_numpy().copy();y=df[f'{name}_lat'].to_numpy().copy()
+        if name=='system':
+            x[df.n_sources.eq(0)]=np.nan;y[df.n_sources.eq(0)]=np.nan
+        ax.plot(x,y,ls=style,color=colors[name],lw=1.3 if name=='system' else .8,label=desc)
+        e=np.linalg.norm(vectors(df,name),axis=1)
+        err.plot(t,e,ls=style,color=colors[name],lw=1.0,label=desc)
+    ax.legend(frameon=False,fontsize=8,loc='lower left',bbox_to_anchor=(-.02,-.02))
+    ax.set_title('地理位置与在线输出',fontsize=10)
+    err.set(xlabel='进入覆盖并集后的时间 / min',ylabel='位置误差 / km',title='单目标误差时序（示意）')
+    err.grid(ls=':',color='.88');err.legend(frameon=False,fontsize=8)
+    err.fill_between(t,0,1,where=df.n_sources.eq(2),transform=err.get_xaxis_transform(),
+                     color='#dcebe3',alpha=.4,zorder=0)
+    dt=float(np.median(np.diff(t)))
+    rows=[('R1视场',df.geometry_r1.eq(1),colors['r1']),('R2视场',df.geometry_r2.eq(1),colors['r2']),
+          ('单源输出',df.n_sources.eq(1),'.55'),('双源输出',df.n_sources.eq(2),colors['system'])]
+    for i,(desc,mask,color) in enumerate(rows):
+        time.broken_barh([(x,dt) for x in t[mask]],(i-.25,.5),facecolors=color)
+    time.set_yticks(range(4),[r[0] for r in rows]);time.invert_yaxis()
+    time.set(xlabel='进入覆盖并集后的时间 / min',title='视场覆盖与有效源接力')
+    time.grid(axis='x',ls=':',color='.88')
+    fig.suptitle(title,fontsize=11,y=.98)
+    fig.savefig(OUT/filename,dpi=230,bbox_inches='tight',pad_inches=.15)
+    plt.close(fig)
+
+
+def fig6_5():
+    _demo('vertical',46101,1,'fig6_5_simulation_relay.png','纯仿真目标的在线航迹接力与双源融合示例')
+
+
+def fig6_6():
+    pick=json.loads((DATA/'demo_selection.json').read_text(encoding='utf-8'))
+    _demo('system',pick['seed'],pick['target'],'fig6_6_adsb_relay.png',
+          'ADS-B航迹驱动的覆盖互补与在线融合示例')
 
 
 if __name__ == "__main__":
+    OUT.mkdir(parents=True, exist_ok=True)
     fig6_1()
     fig6_2()
     fig6_3()
+    fig6_4()
+    fig6_5()
+    fig6_6()
+    print("已生成第六章六幅图：理论、框图、种子配对、覆盖实现率及两个在线地图示例。")

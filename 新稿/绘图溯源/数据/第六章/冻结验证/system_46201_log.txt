@@ -1,0 +1,38 @@
+场景 adsb_ns_all：63 条航迹，2033 帧（dt=30s）
+  配准[mle3] 命中缓存 3c1f6a60
+  虚高已反馈到反演/滤波: R1=321.4km, R2=319.4km (真值 320km)
+R1 偏差估计: dr=18132m, da=-3.00deg (真实: 20000m, -3.00deg)
+R2 偏差估计: dr=-14416m, da=3.50deg (真实: -15000m, 3.50deg)
+
+========== PAPER METRICS (online): adsb_ns_all ==========
+targets=63  frames=2033
+
+[1] RMSE (km)
+  R1_only   n= 3183  rms=  8.344
+  R2_only   n= 3376  rms=  9.100
+  SCC       n= 1144  rms=  4.973
+
+[2] TRACK LENGTH (frames)
+  R1: total=59  real=59 (mean=55.0)  false=0
+  R2: total=58  real=58 (mean=58.9)  false=0
+  系统航迹: 目标 59，比值均值 1.295 中位 1.419，延长 51 缩短 1
+
+[3] MATCHING
+  pairs=56  correct=56  wrong=0  missed=7  precision=100.0%  recall=88.9%
+
+[4] FALSE TRACK RATE
+  R1=0.0%  R2=0.0%
+
+[5] FUSION COVERAGE
+  both=1166  R1_only=2440  R2_only=2050  coverage=20.6%
+
+[6] COMMON-FRAME RMSE (fair comparison)
+  n=1144  R1=6.223  R2=7.734  fused=4.973  gain_vs_best_single=20.1%
+
+[7] CONSISTENCY / LIMITS
+  NEES: R1=2.00  R2=0.94   [consistent ~2]
+  rho(R1,R2)=+0.172
+  theoretical: indep=4.848  optimal(rho)=5.236  actual=4.973
+====================================================
+
+主链路完成：2033 帧

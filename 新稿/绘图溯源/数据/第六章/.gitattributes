@@ -1,0 +1,4 @@
+# 原始快照按字节校验；禁止Git自动转换行尾。
+*.csv -text whitespace=cr-at-eol
+*.json -text whitespace=cr-at-eol
+*.txt -text whitespace=cr-at-eol
