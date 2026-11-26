@@ -50,9 +50,9 @@ body = "\n".join(lines[19:])
 
 # ---------- 标题层级 ----------
 h1 = re.findall(r"^#\s+(.*)$", body, re.M)
-if len(h1) != 7:
-    add("HEADING", f"一级标题数量 {len(h1)} != 7: {h1}")
-for i, (got, exp) in enumerate(zip(h1, EXPECT_H1), 1):
+if not (len(h1) == 7 or (len(h1) == 8 and h1[7].strip() == "参考文献")):
+    add("HEADING", f"一级标题数量非预期（应为7章或7章+参考文献）: {h1}")
+for i, (got, exp) in enumerate(zip(h1[:7], EXPECT_H1), 1):
     if not got.strip().startswith(exp):
         add("HEADING", f"第{i}个一级标题非预期: {got}")
 for mt in re.finditer(r"^(#{1,6})\s+(.*)$", body, re.M):
